@@ -3,7 +3,7 @@
 ###############################################################################
 #                                                                             #
 #  LEXER                                                                      #
-#                                                                             #
+#  First Pass                                                                           #
 ###############################################################################
 
 from token_types import *
@@ -76,29 +76,28 @@ class Lexer(object):
     """ This CLASS is responsible for breaking a program text
         apart into token objects.
         Tokenize string, e.g. '(4 + 2) * 3 - 6 / 2'.
-        Each character is represented by a token
-        """
+        Each character in this string becomes represented by a token.
+    """
     def __init__(self, text):
-        """self.pos:  an index into self.text
-           self.line: the line number count used to report error location.
-           self.line_pos: index within active line used to report position of error.
+        """ text contains the entire program in one string.
+            self.pos:  an index into self.text
+            self.line: the line number count used to report error location.
+            self.line_pos: index within active line used to report position of error.
         """
         self.text = text
-        # self.pos is an index into self.text.
-        #line_count and line_pos are used to report the location of syntax errors.
         self.line_count = 0
         self.line_pos = 0
         self.pos = 0
         self.current_char = self.text[self.pos]
 
     def error(self):
-        """ Reports the location of an invalid character in the input text
+        """ Reports the location of an invalid character (syntax error) in the program text.
         """
         raise ValueError(f"Invalid character '{self.current_char}' in line {self.line_count} at position {self.line_pos}")
 
     def advance(self):
         """Advance the `pos` pointer and set the `current_char` variable.
-           Also keeps track of where we are in the line
+           Also keeps track of where we are in the line.
         """
         self.pos += 1
         self.line_pos += 1
@@ -143,6 +142,7 @@ class Lexer(object):
             result += self.current_char
             self.advance()
         if self.current_char == '.':
+            # it's a float
             result += self.current_char
             self.advance()
             while self.current_char is not None and self.current_char.isdigit():
@@ -169,7 +169,6 @@ class Lexer(object):
         Removes whitespace from input and skips over {comments}
         """
         while self.current_char is not None:
-
             if self.current_char.isspace():
                 self.skip_whitespace()
                 continue

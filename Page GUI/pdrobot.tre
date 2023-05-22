@@ -1,0 +1,80 @@
+PAGE
+    Toplevel: Product Development Cycle Tester
+        Labelframe: Labelframe1  locked
+            Labelframe: Labelframe2  locked
+                Button: buttonBk50  locked command: cb_buttonLin(-50) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Immedite backwards move 50mm relitive}}
+                Button: buttonBk10  locked command: cb_buttonLin(-10) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Immedite backwards move 10mm relitive}}
+                Button: buttonBk1  locked command: cb_buttonLin(-1) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Immedite backwards move 1mm relitive}}
+                Button: buttonBk01  locked command: cb_buttonLin(-0.1) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Immedite backwards move 0.1mm relitive}}
+                Scale: scaleLinSpeed  locked command: cb_scaleLinSpeed
+                Label: Label1  locked
+            Labelframe: Labelframe2_1  locked
+                Button: buttonFw01  locked command: cb_buttonLin(0.1) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Immedite forewards move 0.1mm relitive}}
+                Button: buttonFw1  locked command: cb_buttonLin(1) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Immedite forewards move 1mm relitive}}
+                Button: buttonFw10  locked command: cb_buttonLin(10) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Immedite forewards move 10mm relitive}}
+                Button: buttonFw50  locked command: cb_buttonLin(50) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Immedite forewards move 50mm relitive}}
+                Button: buttonLinHome   command: cb_buttonHome('LIN')
+            Button: buttonLinStop  locked command: cb_stop
+        Frame: Frame1  locked
+            Entry: EntryAbsPos  
+            Entry: EntryAbsRot  
+            Label: Label2  
+            Label: Label3  
+            Label: Label4  locked
+        Labelframe: Labelframe1_1  locked
+            Labelframe: Labelframe2_2  locked
+                Button: buttonCCW90  locked command: cb_buttonRot(-90) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Immedite CCW move 90° relative}}
+                Button: buttonCCW30  locked command: cb_buttonRot(-30) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Immedite CCW move 30° relative}}
+                Button: buttonCCW5  locked command: cb_buttonRot(-5) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Immedite CCW move 5° relative}}
+                Button: buttonCCW1  locked command: cb_buttonRot(-1) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Immedite CCW move 1° relative}}
+                Scale: scaleRotSpeed  locked command: cb_scaleRotSpeed
+                Label: Label1_2  locked
+            Labelframe: Labelframe2_1_1  locked
+                Button: buttonCW1  locked command: cb_buttonRot(1) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Immedite CW move 1° relative}}
+                Button: buttonCW5  locked command: cb_buttonRot(5) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Immedite CW move 5° relative}}
+                Button: buttonCW30  locked command: cb_buttonRot(30) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Immedite CW move 30° relative}}
+                Button: buttonCW90  locked command: cb_buttonRot(90) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Immedite CW move 90° relative}}
+                Button: buttonRotHome   command: cb_buttonHome('ROT')
+            Button: buttonRotStop  locked command: cb_stop
+        Menu Bar
+        Labelframe: Labelframe3  locked
+            Frame: Frame1_1  locked
+                Button: buttonSetWp1  locked command: lambda :cb_waypoint(1, set1_pos, set1_rot) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Set a waypoint at the location below}}
+                Entry: EntryPosWp1  locked
+                Entry: EntryRotWp1  locked
+                Label: Label2_1  locked
+                Label: Label3_1  locked
+                Button: ButtonSetWp1  locked command: lambda :cb_go(1, set1_pos, set1_rot)
+            Frame: Frame1_2  locked
+                Button: buttonSetWp2  locked command: lambda :cb_waypoint(2, set1_pos, set1_rot) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Set a waypoint at the location below}}
+                Entry: EntryPosWp2  locked
+                Entry: EntryRotWp2  locked
+                Label: Label2_2  locked
+                Label: Label3_2  locked
+                Button: ButtonSetWp2  locked command: lambda :cb_go(2, set2_pos, set2_rot)
+            Frame: Frame1_3  locked
+                Button: buttonSetWp3  locked command: lambda :cb_waypoint(3, set1_pos, set1_rot) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Set a waypoint at the location below}}
+                Entry: EntryPosWp3  locked
+                Entry: EntryRotWp3  locked
+                Label: Label2_3  locked
+                Label: Label3_3  locked
+                Button: ButtonSetWp3  locked command: lambda :cb_go(3, set3_pos, set3_rot)
+            Frame: Frame1_4  locked
+                Button: buttonSetWp4  locked command: lambda :cb_waypoint(4, set1_pos, set1_rot) bind: <<SetBalloon>> to {set ::vTcl::balloon::%W {Set a waypoint at the location below}}
+                Entry: EntryPosWp4  locked
+                Entry: EntryRotWp4  locked
+                Label: Label2_4  locked
+                Label: Label3_4  locked
+                Button: ButtonSetWp4  locked command: lambda :cb_go(4, set4_pos, set4_rot)
+        Labelframe: Labelframe4  locked
+            Label: Label5  locked
+            Entry: EntryFile  locked
+            Button: ButtonCancelFile  locked command: cb_cancel_file
+            Button: ButtonOpenFile  locked command: cb_openFile(filepath)
+            Button: ButtonRunProg  locked command: cb_run_program
+            Button: ButtonStepProg  locked command: cb_step_program
+            Button: ButtonSelectFile  locked
+        Labelframe: Labelframe5  locked
+            Scrolledtext: Scrolledtext1  locked
+                Text
+

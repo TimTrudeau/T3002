@@ -1,9 +1,11 @@
 """ Interpreter for Medeco NPD key tester robot"""
 
 ###############################################################################
-#                                                                             #
-#  INTERPRETER                                                                #
-#                                                                             #
+#
+#  INTERPRETER
+#  Third pass
+#  Scans the Abstract Syntax Tree and performs the actions defined in nodes.
+#  Generates GCODES and passes them to
 ###############################################################################
 from __init__ import logger
 from gcode_maker import GCodeMaker
@@ -39,7 +41,7 @@ class Interpreter(NodeVisitor):
         self.ioList = {}
 
     def getType(self, node):
-        """Recursive call to find terminal node.
+        """Recursive call to find terminal (leaf) node.
         *** This method is Not used. ***
         """
         if hasattr(node, 'right'):
@@ -164,8 +166,9 @@ class Interpreter(NodeVisitor):
             return var_value
 
     def visit_Waypoint(self, node):
-        """*********  point is a dict. Need to process dict for point type by visiting dict entries
-            evaluate distance and speed down to signed integers not nodes. store dict of ints"""
+        """******* point is a dict. Need to process dict for point type by visiting dict entries
+            evaluate distance and speed down to signed integers not nodes. store dict of ints
+        """
         point = {k:self.visit(v) for (k,v)  in node.point.items()}
         self.GLOBAL_SCOPE[node.value] = point
 
