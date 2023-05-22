@@ -18,9 +18,9 @@ import pdrobot_support
 
 _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
 _fgcolor = '#000000'  # X11 color: 'black'
-_compcolor = 'gray40' # X11 color: #666666
-_ana1color = '#c3c3c3' # Closest X11 color: 'gray76'
-_ana2color = 'beige' # X11 color: #f5f5dc
+_compcolor = 'gray40'  # X11 color: #666666
+_ana1color = '#c3c3c3'  # Closest X11 color: 'gray76'
+_ana2color = 'beige'  # X11 color: #f5f5dc
 _tabfg1 = 'black'
 _tabfg2 = 'black'
 _tabbg1 = 'grey75'
@@ -28,29 +28,32 @@ _tabbg2 = 'grey89'
 _bgmode = 'light'
 
 _style_code_ran = 0
+
+
 def _style_code():
     global _style_code_ran
     if _style_code_ran:
-       return
+        return
     style = ttk.Style()
     if sys.platform == "win32":
-       style.theme_use('winnative')
-    style.configure('.',background=_bgcolor)
-    style.configure('.',foreground=_fgcolor)
-    style.configure('.',font='TkDefaultFont')
-    style.map('.',background =
-       [('selected', _compcolor), ('active',_ana2color)])
+        style.theme_use('winnative')
+    style.configure('.', background=_bgcolor)
+    style.configure('.', foreground=_fgcolor)
+    style.configure('.', font='TkDefaultFont')
+    style.map('.', background=
+    [('selected', _compcolor), ('active', _ana2color)])
     if _bgmode == 'dark':
-       style.map('.',foreground =
-         [('selected', 'white'), ('active','white')])
+        style.map('.', foreground=
+        [('selected', 'white'), ('active', 'white')])
     else:
-       style.map('.',foreground =
-         [('selected', 'black'), ('active','black')])
-    style.configure('Vertical.TScrollbar',  background=_bgcolor,
-        arrowcolor= _fgcolor)
-    style.configure('Horizontal.TScrollbar',  background=_bgcolor,
-        arrowcolor= _fgcolor)
+        style.map('.', foreground=
+        [('selected', 'black'), ('active', 'black')])
+    style.configure('Vertical.TScrollbar', background=_bgcolor,
+                    arrowcolor=_fgcolor)
+    style.configure('Horizontal.TScrollbar', background=_bgcolor,
+                    arrowcolor=_fgcolor)
     _style_code_ran = 1
+
 
 class Toplevel1:
     def __init__(self, top=None):
@@ -60,7 +63,7 @@ class Toplevel1:
         top.geometry("600x700+504+22")
         top.minsize(120, 120)
         top.maxsize(1900, 1200)
-        top.resizable(1,  1)
+        top.resizable(1, 1)
         top.title("Product Development Cycle Tester")
         top.configure(background="#d9d9d9")
         top.configure(highlightbackground="#d9d9d9")
@@ -81,7 +84,7 @@ class Toplevel1:
 
         self.Labelframe1 = tk.LabelFrame(self.top)
         self.Labelframe1.place(relx=0.033, rely=0.014, relheight=0.193
-                , relwidth=0.917)
+                               , relwidth=0.917)
         self.Labelframe1.configure(relief='groove')
         self.Labelframe1.configure(font="-family {Segoe UI} -size 10 -weight bold")
         self.Labelframe1.configure(foreground="#000000")
@@ -91,7 +94,7 @@ class Toplevel1:
         self.Labelframe1.configure(highlightcolor="black")
         self.Labelframe2 = tk.LabelFrame(self.Labelframe1)
         self.Labelframe2.place(relx=0.018, rely=0.17, relheight=0.748
-                , relwidth=0.4, bordermode='ignore')
+                               , relwidth=0.4, bordermode='ignore')
         self.Labelframe2.configure(relief='groove')
         self.Labelframe2.configure(font="-family {Segoe UI} -size 9 -weight bold")
         self.Labelframe2.configure(foreground="#000000")
@@ -101,11 +104,11 @@ class Toplevel1:
         self.Labelframe2.configure(highlightcolor="black")
         self.buttonBk50 = tk.Button(self.Labelframe2)
         self.buttonBk50.place(relx=0.045, rely=0.198, height=24, width=47
-                , bordermode='ignore')
+                              , bordermode='ignore')
         self.buttonBk50.configure(activebackground="beige")
         self.buttonBk50.configure(activeforeground="black")
         self.buttonBk50.configure(background="#d9d9d9")
-        self.buttonBk50.configure(command=lambda :pdrobot_support.cb_buttonLin(-50))
+        self.buttonBk50.configure(command=lambda: pdrobot_support.cb_buttonLin(-50))
         self.buttonBk50.configure(compound='left')
         self.buttonBk50.configure(disabledforeground="#a3a3a3")
         self.buttonBk50.configure(foreground="#000000")
@@ -114,15 +117,15 @@ class Toplevel1:
         self.buttonBk50.configure(pady="0")
         self.buttonBk50.configure(text='''50''')
         self.buttonBk50_tooltip = \
-        ToolTip(self.buttonBk50, '''Immedite backwards move 50mm relitive''')
+            ToolTip(self.buttonBk50, '''Immedite backwards move 50mm relitive''')
 
         self.buttonBk10 = tk.Button(self.Labelframe2)
         self.buttonBk10.place(relx=0.273, rely=0.198, height=24, width=47
-                , bordermode='ignore')
+                              , bordermode='ignore')
         self.buttonBk10.configure(activebackground="beige")
         self.buttonBk10.configure(activeforeground="black")
         self.buttonBk10.configure(background="#d9d9d9")
-        self.buttonBk10.configure(command=lambda :pdrobot_support.cb_buttonLin(-10))
+        self.buttonBk10.configure(command=lambda: pdrobot_support.cb_buttonLin(-10))
         self.buttonBk10.configure(compound='left')
         self.buttonBk10.configure(disabledforeground="#a3a3a3")
         self.buttonBk10.configure(foreground="#000000")
@@ -131,15 +134,15 @@ class Toplevel1:
         self.buttonBk10.configure(pady="0")
         self.buttonBk10.configure(text='''10''')
         self.buttonBk10_tooltip = \
-        ToolTip(self.buttonBk10, '''Immedite backwards move 10mm relitive''')
+            ToolTip(self.buttonBk10, '''Immedite backwards move 10mm relitive''')
 
         self.buttonBk1 = tk.Button(self.Labelframe2)
         self.buttonBk1.place(relx=0.5, rely=0.198, height=24, width=47
-                , bordermode='ignore')
+                             , bordermode='ignore')
         self.buttonBk1.configure(activebackground="beige")
         self.buttonBk1.configure(activeforeground="black")
         self.buttonBk1.configure(background="#d9d9d9")
-        self.buttonBk1.configure(command=lambda :pdrobot_support.cb_buttonLin(-1))
+        self.buttonBk1.configure(command=lambda: pdrobot_support.cb_buttonLin(-1))
         self.buttonBk1.configure(compound='left')
         self.buttonBk1.configure(disabledforeground="#a3a3a3")
         self.buttonBk1.configure(foreground="#000000")
@@ -148,15 +151,15 @@ class Toplevel1:
         self.buttonBk1.configure(pady="0")
         self.buttonBk1.configure(text='''1''')
         self.buttonBk1_tooltip = \
-        ToolTip(self.buttonBk1, '''Immedite backwards move 1mm relitive''')
+            ToolTip(self.buttonBk1, '''Immedite backwards move 1mm relitive''')
 
         self.buttonBk01 = tk.Button(self.Labelframe2)
         self.buttonBk01.place(relx=0.727, rely=0.198, height=24, width=47
-                , bordermode='ignore')
+                              , bordermode='ignore')
         self.buttonBk01.configure(activebackground="beige")
         self.buttonBk01.configure(activeforeground="black")
         self.buttonBk01.configure(background="#d9d9d9")
-        self.buttonBk01.configure(command=lambda :pdrobot_support.cb_buttonLin(float(-0.1)))
+        self.buttonBk01.configure(command=lambda: pdrobot_support.cb_buttonLin(float(-0.1)))
         self.buttonBk01.configure(compound='left')
         self.buttonBk01.configure(disabledforeground="#a3a3a3")
         self.buttonBk01.configure(foreground="#000000")
@@ -165,11 +168,11 @@ class Toplevel1:
         self.buttonBk01.configure(pady="0")
         self.buttonBk01.configure(text='''0.1''')
         self.buttonBk01_tooltip = \
-        ToolTip(self.buttonBk01, '''Immedite backwards move 0.1mm relitive''')
+            ToolTip(self.buttonBk01, '''Immedite backwards move 0.1mm relitive''')
 
-        self.scaleLinSpeed =  tk.Scale(self.Labelframe2, from_=0.0, to=100.0, resolution=1.0)
+        self.scaleLinSpeed = tk.Scale(self.Labelframe2, from_=0.0, to=100.0, resolution=1.0)
         self.scaleLinSpeed.place(relx=0.182, rely=0.446, relheight=0.416
-                , relwidth=0.545)
+                                 , relwidth=0.545)
         self.scaleLinSpeed.configure(activebackground="beige")
         self.scaleLinSpeed.configure(background="#d9d9d9")
         self.scaleLinSpeed.configure(command=pdrobot_support.cb_scaleLinSpeed)
@@ -181,7 +184,7 @@ class Toplevel1:
         self.scaleLinSpeed.configure(troughcolor="#d9d9d9")
         self.Label1 = tk.Label(self.Labelframe2)
         self.Label1.place(relx=0.023, rely=0.644, height=18, width=34
-                , bordermode='ignore')
+                          , bordermode='ignore')
         self.Label1.configure(activebackground="#f9f9f9")
         self.Label1.configure(anchor='w')
         self.Label1.configure(background="#d9d9d9")
@@ -193,7 +196,7 @@ class Toplevel1:
         self.Label1.configure(text='''Speed''')
         self.Labelframe2_1 = tk.LabelFrame(self.Labelframe1)
         self.Labelframe2_1.place(relx=0.582, rely=0.148, relheight=0.748
-                , relwidth=0.4, bordermode='ignore')
+                                 , relwidth=0.4, bordermode='ignore')
         self.Labelframe2_1.configure(relief='groove')
         self.Labelframe2_1.configure(font="-family {Segoe UI} -size 9 -weight bold")
         self.Labelframe2_1.configure(foreground="#000000")
@@ -203,11 +206,11 @@ class Toplevel1:
         self.Labelframe2_1.configure(highlightcolor="black")
         self.buttonFw01 = tk.Button(self.Labelframe2_1)
         self.buttonFw01.place(relx=0.045, rely=0.198, height=24, width=47
-                , bordermode='ignore')
+                              , bordermode='ignore')
         self.buttonFw01.configure(activebackground="beige")
         self.buttonFw01.configure(activeforeground="black")
         self.buttonFw01.configure(background="#d9d9d9")
-        self.buttonFw01.configure(command=lambda :pdrobot_support.cb_buttonLin(float(0.1)))
+        self.buttonFw01.configure(command=lambda: pdrobot_support.cb_buttonLin(float(0.1)))
         self.buttonFw01.configure(compound='left')
         self.buttonFw01.configure(disabledforeground="#a3a3a3")
         self.buttonFw01.configure(foreground="#000000")
@@ -216,15 +219,15 @@ class Toplevel1:
         self.buttonFw01.configure(pady="0")
         self.buttonFw01.configure(text='''0.1''')
         self.buttonFw01_tooltip = \
-        ToolTip(self.buttonFw01, '''Immedite forewards move 0.1mm relitive''')
+            ToolTip(self.buttonFw01, '''Immedite forewards move 0.1mm relitive''')
 
         self.buttonFw1 = tk.Button(self.Labelframe2_1)
         self.buttonFw1.place(relx=0.273, rely=0.198, height=24, width=47
-                , bordermode='ignore')
+                             , bordermode='ignore')
         self.buttonFw1.configure(activebackground="beige")
         self.buttonFw1.configure(activeforeground="black")
         self.buttonFw1.configure(background="#d9d9d9")
-        self.buttonFw1.configure(command=lambda:pdrobot_support.cb_buttonLin(1))
+        self.buttonFw1.configure(command=lambda: pdrobot_support.cb_buttonLin(1))
         self.buttonFw1.configure(compound='left')
         self.buttonFw1.configure(disabledforeground="#a3a3a3")
         self.buttonFw1.configure(foreground="#000000")
@@ -233,15 +236,15 @@ class Toplevel1:
         self.buttonFw1.configure(pady="0")
         self.buttonFw1.configure(text='''1''')
         self.buttonFw1_tooltip = \
-        ToolTip(self.buttonFw1, '''Immedite forewards move 1mm relitive''')
+            ToolTip(self.buttonFw1, '''Immedite forewards move 1mm relitive''')
 
         self.buttonFw10 = tk.Button(self.Labelframe2_1)
         self.buttonFw10.place(relx=0.5, rely=0.198, height=24, width=47
-                , bordermode='ignore')
+                              , bordermode='ignore')
         self.buttonFw10.configure(activebackground="beige")
         self.buttonFw10.configure(activeforeground="black")
         self.buttonFw10.configure(background="#d9d9d9")
-        self.buttonFw10.configure(command=lambda:pdrobot_support.cb_buttonLin(10))
+        self.buttonFw10.configure(command=lambda: pdrobot_support.cb_buttonLin(10))
         self.buttonFw10.configure(compound='left')
         self.buttonFw10.configure(disabledforeground="#a3a3a3")
         self.buttonFw10.configure(foreground="#000000")
@@ -250,15 +253,15 @@ class Toplevel1:
         self.buttonFw10.configure(pady="0")
         self.buttonFw10.configure(text='''10''')
         self.buttonFw10_tooltip = \
-        ToolTip(self.buttonFw10, '''Immedite forewards move 10mm relitive''')
+            ToolTip(self.buttonFw10, '''Immedite forewards move 10mm relitive''')
 
         self.buttonFw50 = tk.Button(self.Labelframe2_1)
         self.buttonFw50.place(relx=0.727, rely=0.198, height=24, width=47
-                , bordermode='ignore')
+                              , bordermode='ignore')
         self.buttonFw50.configure(activebackground="beige")
         self.buttonFw50.configure(activeforeground="black")
         self.buttonFw50.configure(background="#d9d9d9")
-        self.buttonFw50.configure(command=lambda:pdrobot_support.cb_buttonLin(50))
+        self.buttonFw50.configure(command=lambda: pdrobot_support.cb_buttonLin(50))
         self.buttonFw50.configure(compound='left')
         self.buttonFw50.configure(disabledforeground="#a3a3a3")
         self.buttonFw50.configure(foreground="#000000")
@@ -267,15 +270,15 @@ class Toplevel1:
         self.buttonFw50.configure(pady="0")
         self.buttonFw50.configure(text='''50''')
         self.buttonFw50_tooltip = \
-        ToolTip(self.buttonFw50, '''Immedite forewards move 50mm relitive''')
+            ToolTip(self.buttonFw50, '''Immedite forewards move 50mm relitive''')
 
         self.buttonLinHome = tk.Button(self.Labelframe2_1)
         self.buttonLinHome.place(relx=0.364, rely=0.594, height=24, width=47
-                , bordermode='ignore')
+                                 , bordermode='ignore')
         self.buttonLinHome.configure(activebackground="beige")
         self.buttonLinHome.configure(activeforeground="black")
         self.buttonLinHome.configure(background="#d9d9d9")
-        self.buttonLinHome.configure(command=lambda :pdrobot_support.cb_buttonHome('LIN'))
+        self.buttonLinHome.configure(command=lambda: pdrobot_support.cb_buttonHome('LIN'))
         self.buttonLinHome.configure(compound='left')
         self.buttonLinHome.configure(disabledforeground="#a3a3a3")
         self.buttonLinHome.configure(foreground="#000000")
@@ -285,7 +288,7 @@ class Toplevel1:
         self.buttonLinHome.configure(text='''Home''')
         self.buttonLinStop = tk.Button(self.Labelframe1)
         self.buttonLinStop.place(relx=0.436, rely=0.222, height=60, width=70
-                , bordermode='ignore')
+                                 , bordermode='ignore')
         self.buttonLinStop.configure(activebackground="beige")
         self.buttonLinStop.configure(activeforeground="black")
         self.buttonLinStop.configure(background="#d9d9d9")
@@ -300,7 +303,7 @@ class Toplevel1:
         self.buttonLinStop.configure(text='''STOP''')
         self.Frame1 = tk.Frame(self.top)
         self.Frame1.place(relx=0.783, rely=0.429, relheight=0.157
-                , relwidth=0.183)
+                          , relwidth=0.183)
         self.Frame1.configure(relief='flat')
         self.Frame1.configure(borderwidth="2")
         self.Frame1.configure(background="#d9d9d9")
@@ -367,7 +370,7 @@ class Toplevel1:
         self.Label4.configure(text='''Absolute Location''')
         self.Labelframe1_1 = tk.LabelFrame(self.top)
         self.Labelframe1_1.place(relx=0.033, rely=0.207, relheight=0.193
-                , relwidth=0.917)
+                                 , relwidth=0.917)
         self.Labelframe1_1.configure(relief='groove')
         self.Labelframe1_1.configure(font="-family {Segoe UI} -size 10 -weight bold")
         self.Labelframe1_1.configure(foreground="#000000")
@@ -377,7 +380,7 @@ class Toplevel1:
         self.Labelframe1_1.configure(highlightcolor="black")
         self.Labelframe2_2 = tk.LabelFrame(self.Labelframe1_1)
         self.Labelframe2_2.place(relx=0.018, rely=0.148, relheight=0.748
-                , relwidth=0.4, bordermode='ignore')
+                                 , relwidth=0.4, bordermode='ignore')
         self.Labelframe2_2.configure(relief='groove')
         self.Labelframe2_2.configure(font="-family {Segoe UI} -size 9 -weight bold")
         self.Labelframe2_2.configure(foreground="#000000")
@@ -387,11 +390,11 @@ class Toplevel1:
         self.Labelframe2_2.configure(highlightcolor="black")
         self.buttonCCW90 = tk.Button(self.Labelframe2_2)
         self.buttonCCW90.place(relx=0.036, rely=0.198, height=24, width=47
-                , bordermode='ignore')
+                               , bordermode='ignore')
         self.buttonCCW90.configure(activebackground="beige")
         self.buttonCCW90.configure(activeforeground="black")
         self.buttonCCW90.configure(background="#d9d9d9")
-        self.buttonCCW90.configure(command=lambda :pdrobot_support.cb_buttonRot(-90))
+        self.buttonCCW90.configure(command=lambda: pdrobot_support.cb_buttonRot(-90))
         self.buttonCCW90.configure(compound='left')
         self.buttonCCW90.configure(disabledforeground="#a3a3a3")
         self.buttonCCW90.configure(foreground="#000000")
@@ -400,15 +403,15 @@ class Toplevel1:
         self.buttonCCW90.configure(pady="0")
         self.buttonCCW90.configure(text='''90''')
         self.buttonCCW90_tooltip = \
-        ToolTip(self.buttonCCW90, '''Immedite CCW move 90° relative''')
+            ToolTip(self.buttonCCW90, '''Immedite CCW move 90° relative''')
 
         self.buttonCCW30 = tk.Button(self.Labelframe2_2)
         self.buttonCCW30.place(relx=0.273, rely=0.198, height=24, width=47
-                , bordermode='ignore')
+                               , bordermode='ignore')
         self.buttonCCW30.configure(activebackground="beige")
         self.buttonCCW30.configure(activeforeground="black")
         self.buttonCCW30.configure(background="#d9d9d9")
-        self.buttonCCW30.configure(command=lambda :pdrobot_support.cb_buttonRot(-30))
+        self.buttonCCW30.configure(command=lambda: pdrobot_support.cb_buttonRot(-30))
         self.buttonCCW30.configure(compound='left')
         self.buttonCCW30.configure(disabledforeground="#a3a3a3")
         self.buttonCCW30.configure(foreground="#000000")
@@ -417,15 +420,15 @@ class Toplevel1:
         self.buttonCCW30.configure(pady="0")
         self.buttonCCW30.configure(text='''30''')
         self.buttonCCW30_tooltip = \
-        ToolTip(self.buttonCCW30, '''Immedite CCW move 30° relative''')
+            ToolTip(self.buttonCCW30, '''Immedite CCW move 30° relative''')
 
         self.buttonCCW5 = tk.Button(self.Labelframe2_2)
         self.buttonCCW5.place(relx=0.5, rely=0.198, height=24, width=47
-                , bordermode='ignore')
+                              , bordermode='ignore')
         self.buttonCCW5.configure(activebackground="beige")
         self.buttonCCW5.configure(activeforeground="black")
         self.buttonCCW5.configure(background="#d9d9d9")
-        self.buttonCCW5.configure(command=lambda :pdrobot_support.cb_buttonRot(-5))
+        self.buttonCCW5.configure(command=lambda: pdrobot_support.cb_buttonRot(-5))
         self.buttonCCW5.configure(compound='left')
         self.buttonCCW5.configure(disabledforeground="#a3a3a3")
         self.buttonCCW5.configure(foreground="#000000")
@@ -434,15 +437,15 @@ class Toplevel1:
         self.buttonCCW5.configure(pady="0")
         self.buttonCCW5.configure(text='''5''')
         self.buttonCCW5_tooltip = \
-        ToolTip(self.buttonCCW5, '''Immedite CCW move 5° relative''')
+            ToolTip(self.buttonCCW5, '''Immedite CCW move 5° relative''')
 
         self.buttonCCW1 = tk.Button(self.Labelframe2_2)
         self.buttonCCW1.place(relx=0.727, rely=0.198, height=24, width=47
-                , bordermode='ignore')
+                              , bordermode='ignore')
         self.buttonCCW1.configure(activebackground="beige")
         self.buttonCCW1.configure(activeforeground="black")
         self.buttonCCW1.configure(background="#d9d9d9")
-        self.buttonCCW1.configure(command=lambda :pdrobot_support.cb_buttonRot(-1))
+        self.buttonCCW1.configure(command=lambda: pdrobot_support.cb_buttonRot(-1))
         self.buttonCCW1.configure(compound='left')
         self.buttonCCW1.configure(disabledforeground="#a3a3a3")
         self.buttonCCW1.configure(foreground="#000000")
@@ -451,11 +454,11 @@ class Toplevel1:
         self.buttonCCW1.configure(pady="0")
         self.buttonCCW1.configure(text='''1''')
         self.buttonCCW1_tooltip = \
-        ToolTip(self.buttonCCW1, '''Immedite CCW move 1° relative''')
+            ToolTip(self.buttonCCW1, '''Immedite CCW move 1° relative''')
 
-        self.scaleRotSpeed =  tk.Scale(self.Labelframe2_2, from_=0.0, to=100.0, resolution=1.0)
+        self.scaleRotSpeed = tk.Scale(self.Labelframe2_2, from_=0.0, to=100.0, resolution=1.0)
         self.scaleRotSpeed.place(relx=0.182, rely=0.446, relheight=0.416
-                , relwidth=0.545)
+                                 , relwidth=0.545)
         self.scaleRotSpeed.configure(activebackground="beige")
         self.scaleRotSpeed.configure(background="#d9d9d9")
         self.scaleRotSpeed.configure(command=pdrobot_support.cb_scaleRotSpeed)
@@ -467,7 +470,7 @@ class Toplevel1:
         self.scaleRotSpeed.configure(troughcolor="#d9d9d9")
         self.Label1_2 = tk.Label(self.Labelframe2_2)
         self.Label1_2.place(relx=0.023, rely=0.644, height=18, width=34
-                , bordermode='ignore')
+                            , bordermode='ignore')
         self.Label1_2.configure(activebackground="#f9f9f9")
         self.Label1_2.configure(anchor='w')
         self.Label1_2.configure(background="#d9d9d9")
@@ -479,7 +482,7 @@ class Toplevel1:
         self.Label1_2.configure(text='''Speed''')
         self.Labelframe2_1_1 = tk.LabelFrame(self.Labelframe1_1)
         self.Labelframe2_1_1.place(relx=0.582, rely=0.148, relheight=0.748
-                , relwidth=0.4, bordermode='ignore')
+                                   , relwidth=0.4, bordermode='ignore')
         self.Labelframe2_1_1.configure(relief='groove')
         self.Labelframe2_1_1.configure(font="-family {Segoe UI} -size 9 -weight bold")
         self.Labelframe2_1_1.configure(foreground="#000000")
@@ -489,11 +492,11 @@ class Toplevel1:
         self.Labelframe2_1_1.configure(highlightcolor="black")
         self.buttonCW1 = tk.Button(self.Labelframe2_1_1)
         self.buttonCW1.place(relx=0.045, rely=0.198, height=24, width=47
-                , bordermode='ignore')
+                             , bordermode='ignore')
         self.buttonCW1.configure(activebackground="beige")
         self.buttonCW1.configure(activeforeground="black")
         self.buttonCW1.configure(background="#d9d9d9")
-        self.buttonCW1.configure(command=lambda:pdrobot_support.cb_buttonRot(1))
+        self.buttonCW1.configure(command=lambda: pdrobot_support.cb_buttonRot(1))
         self.buttonCW1.configure(compound='left')
         self.buttonCW1.configure(disabledforeground="#a3a3a3")
         self.buttonCW1.configure(foreground="#000000")
@@ -502,15 +505,15 @@ class Toplevel1:
         self.buttonCW1.configure(pady="0")
         self.buttonCW1.configure(text='''1''')
         self.buttonCW1_tooltip = \
-        ToolTip(self.buttonCW1, '''Immedite CW move 1° relative''')
+            ToolTip(self.buttonCW1, '''Immedite CW move 1° relative''')
 
         self.buttonCW5 = tk.Button(self.Labelframe2_1_1)
         self.buttonCW5.place(relx=0.273, rely=0.198, height=24, width=47
-                , bordermode='ignore')
+                             , bordermode='ignore')
         self.buttonCW5.configure(activebackground="beige")
         self.buttonCW5.configure(activeforeground="black")
         self.buttonCW5.configure(background="#d9d9d9")
-        self.buttonCW5.configure(command=lambda:pdrobot_support.cb_buttonRot(5))
+        self.buttonCW5.configure(command=lambda: pdrobot_support.cb_buttonRot(5))
         self.buttonCW5.configure(compound='left')
         self.buttonCW5.configure(disabledforeground="#a3a3a3")
         self.buttonCW5.configure(foreground="#000000")
@@ -519,15 +522,15 @@ class Toplevel1:
         self.buttonCW5.configure(pady="0")
         self.buttonCW5.configure(text='''5''')
         self.buttonCW5_tooltip = \
-        ToolTip(self.buttonCW5, '''Immedite CW move 5° relative''')
+            ToolTip(self.buttonCW5, '''Immedite CW move 5° relative''')
 
         self.buttonCW30 = tk.Button(self.Labelframe2_1_1)
         self.buttonCW30.place(relx=0.5, rely=0.198, height=24, width=47
-                , bordermode='ignore')
+                              , bordermode='ignore')
         self.buttonCW30.configure(activebackground="beige")
         self.buttonCW30.configure(activeforeground="black")
         self.buttonCW30.configure(background="#d9d9d9")
-        self.buttonCW30.configure(command=lambda:pdrobot_support.cb_buttonRot(30))
+        self.buttonCW30.configure(command=lambda: pdrobot_support.cb_buttonRot(30))
         self.buttonCW30.configure(compound='left')
         self.buttonCW30.configure(disabledforeground="#a3a3a3")
         self.buttonCW30.configure(foreground="#000000")
@@ -536,15 +539,15 @@ class Toplevel1:
         self.buttonCW30.configure(pady="0")
         self.buttonCW30.configure(text='''30''')
         self.buttonCW30_tooltip = \
-        ToolTip(self.buttonCW30, '''Immedite CW move 30° relative''')
+            ToolTip(self.buttonCW30, '''Immedite CW move 30° relative''')
 
         self.buttonCW90 = tk.Button(self.Labelframe2_1_1)
         self.buttonCW90.place(relx=0.727, rely=0.198, height=24, width=47
-                , bordermode='ignore')
+                              , bordermode='ignore')
         self.buttonCW90.configure(activebackground="beige")
         self.buttonCW90.configure(activeforeground="black")
         self.buttonCW90.configure(background="#d9d9d9")
-        self.buttonCW90.configure(command=lambda:pdrobot_support.cb_buttonRot(90))
+        self.buttonCW90.configure(command=lambda: pdrobot_support.cb_buttonRot(90))
         self.buttonCW90.configure(compound='left')
         self.buttonCW90.configure(disabledforeground="#a3a3a3")
         self.buttonCW90.configure(foreground="#000000")
@@ -553,15 +556,15 @@ class Toplevel1:
         self.buttonCW90.configure(pady="0")
         self.buttonCW90.configure(text='''90''')
         self.buttonCW90_tooltip = \
-        ToolTip(self.buttonCW90, '''Immedite CW move 90° relative''')
+            ToolTip(self.buttonCW90, '''Immedite CW move 90° relative''')
 
         self.buttonRotHome = tk.Button(self.Labelframe2_1_1)
         self.buttonRotHome.place(relx=0.364, rely=0.594, height=24, width=60
-                , bordermode='ignore')
+                                 , bordermode='ignore')
         self.buttonRotHome.configure(activebackground="beige")
         self.buttonRotHome.configure(activeforeground="black")
         self.buttonRotHome.configure(background="#d9d9d9")
-        self.buttonRotHome.configure(command=lambda :pdrobot_support.cb_buttonHome('ROT'))
+        self.buttonRotHome.configure(command=lambda: pdrobot_support.cb_buttonHome('ROT'))
         self.buttonRotHome.configure(compound='left')
         self.buttonRotHome.configure(disabledforeground="#a3a3a3")
         self.buttonRotHome.configure(foreground="#000000")
@@ -572,7 +575,7 @@ class Toplevel1:
         self.buttonRotHome.configure(text='''Home''')
         self.buttonRotStop = tk.Button(self.Labelframe1_1)
         self.buttonRotStop.place(relx=0.436, rely=0.222, height=60, width=70
-                , bordermode='ignore')
+                                 , bordermode='ignore')
         self.buttonRotStop.configure(activebackground="beige")
         self.buttonRotStop.configure(activeforeground="black")
         self.buttonRotStop.configure(background="#d9d9d9")
@@ -585,12 +588,12 @@ class Toplevel1:
         self.buttonRotStop.configure(highlightcolor="black")
         self.buttonRotStop.configure(pady="0")
         self.buttonRotStop.configure(text='''STOP''')
-        self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
-        top.configure(menu = self.menubar)
+        self.menubar = tk.Menu(top, font="TkMenuFont", bg=_bgcolor, fg=_fgcolor)
+        top.configure(menu=self.menubar)
 
         self.Labelframe3 = tk.LabelFrame(self.top)
         self.Labelframe3.place(relx=0.008, rely=0.407, relheight=0.193
-                , relwidth=0.75)
+                               , relwidth=0.75)
         self.Labelframe3.configure(relief='flat')
         self.Labelframe3.configure(font="-family {Segoe UI} -size 10 -weight bold")
         self.Labelframe3.configure(foreground="#000000")
@@ -601,7 +604,7 @@ class Toplevel1:
         self.Labelframe3.configure(highlightcolor="black")
         self.Frame1_1 = tk.Frame(self.Labelframe3)
         self.Frame1_1.place(relx=0.022, rely=0.148, relheight=0.815
-                , relwidth=0.244, bordermode='ignore')
+                            , relwidth=0.244, bordermode='ignore')
         self.Frame1_1.configure(relief='groove')
         self.Frame1_1.configure(borderwidth="2")
         self.Frame1_1.configure(relief="groove")
@@ -613,7 +616,7 @@ class Toplevel1:
         self.buttonSetWp1.configure(activebackground="beige")
         self.buttonSetWp1.configure(activeforeground="black")
         self.buttonSetWp1.configure(background="#d9d9d9")
-        self.buttonSetWp1.configure(command=lambda :pdrobot_support.cb_waypoint(1, self.set1_pos, self.set1_rot))
+        self.buttonSetWp1.configure(command=lambda: pdrobot_support.cb_waypoint(1, self.set1_pos, self.set1_rot))
         self.buttonSetWp1.configure(compound='left')
         self.buttonSetWp1.configure(disabledforeground="#a3a3a3")
         self.buttonSetWp1.configure(foreground="#000000")
@@ -622,7 +625,7 @@ class Toplevel1:
         self.buttonSetWp1.configure(pady="0")
         self.buttonSetWp1.configure(text='''Set 1''')
         self.buttonSetWp1_tooltip = \
-        ToolTip(self.buttonSetWp1, '''Set a waypoint at the location below''')
+            ToolTip(self.buttonSetWp1, '''Set a waypoint at the location below''')
 
         self.EntryPosWp1 = tk.Entry(self.Frame1_1)
         self.EntryPosWp1.place(relx=0.045, rely=0.455, height=20, relwidth=0.455)
@@ -676,7 +679,7 @@ class Toplevel1:
         self.ButtonSetWp1.configure(activebackground="beige")
         self.ButtonSetWp1.configure(activeforeground="black")
         self.ButtonSetWp1.configure(background="#d9d9d9")
-        self.ButtonSetWp1.configure(command=lambda :pdrobot_support.cb_go(1, self.set1_pos, self.set1_rot))
+        self.ButtonSetWp1.configure(command=lambda: pdrobot_support.cb_go(1, self.set1_pos, self.set1_rot))
         self.ButtonSetWp1.configure(compound='left')
         self.ButtonSetWp1.configure(disabledforeground="#a3a3a3")
         self.ButtonSetWp1.configure(foreground="#000000")
@@ -686,7 +689,7 @@ class Toplevel1:
         self.ButtonSetWp1.configure(text='''Go''')
         self.Frame1_2 = tk.Frame(self.Labelframe3)
         self.Frame1_2.place(relx=0.267, rely=0.148, relheight=0.815
-                , relwidth=0.244, bordermode='ignore')
+                            , relwidth=0.244, bordermode='ignore')
         self.Frame1_2.configure(relief='groove')
         self.Frame1_2.configure(borderwidth="2")
         self.Frame1_2.configure(relief="groove")
@@ -698,7 +701,7 @@ class Toplevel1:
         self.buttonSetWp2.configure(activebackground="beige")
         self.buttonSetWp2.configure(activeforeground="black")
         self.buttonSetWp2.configure(background="#d9d9d9")
-        self.buttonSetWp2.configure(command=lambda :pdrobot_support.cb_waypoint(2, self.set2_pos, self.set2_rot))
+        self.buttonSetWp2.configure(command=lambda: pdrobot_support.cb_waypoint(2, self.set2_pos, self.set2_rot))
         self.buttonSetWp2.configure(compound='left')
         self.buttonSetWp2.configure(disabledforeground="#a3a3a3")
         self.buttonSetWp2.configure(foreground="#000000")
@@ -707,7 +710,7 @@ class Toplevel1:
         self.buttonSetWp2.configure(pady="0")
         self.buttonSetWp2.configure(text='''Set 2''')
         self.buttonSetWp2_tooltip = \
-        ToolTip(self.buttonSetWp2, '''Set a waypoint at the location below''')
+            ToolTip(self.buttonSetWp2, '''Set a waypoint at the location below''')
 
         self.EntryPosWp2 = tk.Entry(self.Frame1_2)
         self.EntryPosWp2.place(relx=0.045, rely=0.455, height=20, relwidth=0.455)
@@ -761,7 +764,7 @@ class Toplevel1:
         self.ButtonSetWp2.configure(activebackground="beige")
         self.ButtonSetWp2.configure(activeforeground="black")
         self.ButtonSetWp2.configure(background="#d9d9d9")
-        self.ButtonSetWp2.configure(command=lambda :pdrobot_support.cb_go(2, self.set2_pos, self.set2_rot))
+        self.ButtonSetWp2.configure(command=lambda: pdrobot_support.cb_go(2, self.set2_pos, self.set2_rot))
         self.ButtonSetWp2.configure(compound='left')
         self.ButtonSetWp2.configure(disabledforeground="#a3a3a3")
         self.ButtonSetWp2.configure(foreground="#000000")
@@ -771,7 +774,7 @@ class Toplevel1:
         self.ButtonSetWp2.configure(text='''Go''')
         self.Frame1_3 = tk.Frame(self.Labelframe3)
         self.Frame1_3.place(relx=0.511, rely=0.148, relheight=0.815
-                , relwidth=0.244, bordermode='ignore')
+                            , relwidth=0.244, bordermode='ignore')
         self.Frame1_3.configure(relief='groove')
         self.Frame1_3.configure(borderwidth="2")
         self.Frame1_3.configure(relief="groove")
@@ -783,7 +786,7 @@ class Toplevel1:
         self.buttonSetWp3.configure(activebackground="beige")
         self.buttonSetWp3.configure(activeforeground="black")
         self.buttonSetWp3.configure(background="#d9d9d9")
-        self.buttonSetWp3.configure(command=lambda :pdrobot_support.cb_waypoint(3, self.set3_pos, self.set3_rot))
+        self.buttonSetWp3.configure(command=lambda: pdrobot_support.cb_waypoint(3, self.set3_pos, self.set3_rot))
         self.buttonSetWp3.configure(compound='left')
         self.buttonSetWp3.configure(disabledforeground="#a3a3a3")
         self.buttonSetWp3.configure(foreground="#000000")
@@ -792,7 +795,7 @@ class Toplevel1:
         self.buttonSetWp3.configure(pady="0")
         self.buttonSetWp3.configure(text='''Set 3''')
         self.buttonSetWp3_tooltip = \
-        ToolTip(self.buttonSetWp3, '''Set a waypoint at the location below''')
+            ToolTip(self.buttonSetWp3, '''Set a waypoint at the location below''')
 
         self.EntryPosWp3 = tk.Entry(self.Frame1_3)
         self.EntryPosWp3.place(relx=0.045, rely=0.455, height=20, relwidth=0.455)
@@ -846,7 +849,7 @@ class Toplevel1:
         self.ButtonSetWp3.configure(activebackground="beige")
         self.ButtonSetWp3.configure(activeforeground="black")
         self.ButtonSetWp3.configure(background="#d9d9d9")
-        self.ButtonSetWp3.configure(command=lambda :pdrobot_support.cb_go(3, self.set3_pos, self.set3_rot))
+        self.ButtonSetWp3.configure(command=lambda: pdrobot_support.cb_go(3, self.set3_pos, self.set3_rot))
         self.ButtonSetWp3.configure(compound='left')
         self.ButtonSetWp3.configure(disabledforeground="#a3a3a3")
         self.ButtonSetWp3.configure(foreground="#000000")
@@ -856,7 +859,7 @@ class Toplevel1:
         self.ButtonSetWp3.configure(text='''Go''')
         self.Frame1_4 = tk.Frame(self.Labelframe3)
         self.Frame1_4.place(relx=0.756, rely=0.148, relheight=0.815
-                , relwidth=0.244, bordermode='ignore')
+                            , relwidth=0.244, bordermode='ignore')
         self.Frame1_4.configure(relief='groove')
         self.Frame1_4.configure(borderwidth="2")
         self.Frame1_4.configure(relief="groove")
@@ -868,7 +871,7 @@ class Toplevel1:
         self.buttonSetWp4.configure(activebackground="beige")
         self.buttonSetWp4.configure(activeforeground="black")
         self.buttonSetWp4.configure(background="#d9d9d9")
-        self.buttonSetWp4.configure(command=lambda :pdrobot_support.cb_waypoint(4, self.set4_pos, self.set4_rot))
+        self.buttonSetWp4.configure(command=lambda: pdrobot_support.cb_waypoint(4, self.set4_pos, self.set4_rot))
         self.buttonSetWp4.configure(compound='left')
         self.buttonSetWp4.configure(disabledforeground="#a3a3a3")
         self.buttonSetWp4.configure(foreground="#000000")
@@ -877,7 +880,7 @@ class Toplevel1:
         self.buttonSetWp4.configure(pady="0")
         self.buttonSetWp4.configure(text='''Set 4''')
         self.buttonSetWp4_tooltip = \
-        ToolTip(self.buttonSetWp4, '''Set a waypoint at the location below''')
+            ToolTip(self.buttonSetWp4, '''Set a waypoint at the location below''')
 
         self.EntryPosWp4 = tk.Entry(self.Frame1_4)
         self.EntryPosWp4.place(relx=0.045, rely=0.455, height=20, relwidth=0.455)
@@ -931,7 +934,7 @@ class Toplevel1:
         self.ButtonSetWp4.configure(activebackground="beige")
         self.ButtonSetWp4.configure(activeforeground="black")
         self.ButtonSetWp4.configure(background="#d9d9d9")
-        self.ButtonSetWp4.configure(command=lambda :pdrobot_support.cb_go(4, self.set4_pos, self.set4_rot))
+        self.ButtonSetWp4.configure(command=lambda: pdrobot_support.cb_go(4, self.set4_pos, self.set4_rot))
         self.ButtonSetWp4.configure(compound='left')
         self.ButtonSetWp4.configure(disabledforeground="#a3a3a3")
         self.ButtonSetWp4.configure(foreground="#000000")
@@ -941,7 +944,7 @@ class Toplevel1:
         self.ButtonSetWp4.configure(text='''Go''')
         self.Labelframe4 = tk.LabelFrame(self.top)
         self.Labelframe4.place(relx=0.033, rely=0.857, relheight=0.107
-                , relwidth=0.9)
+                               , relwidth=0.9)
         self.Labelframe4.configure(relief='groove')
         self.Labelframe4.configure(font="-family {Segoe UI} -size 10 -weight bold")
         self.Labelframe4.configure(foreground="#000000")
@@ -951,7 +954,7 @@ class Toplevel1:
         self.Labelframe4.configure(highlightcolor="black")
         self.Label5 = tk.Label(self.Labelframe4)
         self.Label5.place(relx=0.019, rely=0.267, height=21, width=64
-                , bordermode='ignore')
+                          , bordermode='ignore')
         self.Label5.configure(activebackground="#f9f9f9")
         self.Label5.configure(anchor='w')
         self.Label5.configure(background="#d9d9d9")
@@ -963,7 +966,7 @@ class Toplevel1:
         self.Label5.configure(text='''File Name''')
         self.EntryFile = tk.Entry(self.Labelframe4)
         self.EntryFile.place(relx=0.13, rely=0.267, height=20, relwidth=0.778
-                , bordermode='ignore')
+                             , bordermode='ignore')
         self.EntryFile.configure(background="white")
         self.EntryFile.configure(disabledforeground="#a3a3a3")
         self.EntryFile.configure(font="TkFixedFont")
@@ -976,7 +979,7 @@ class Toplevel1:
         self.EntryFile.configure(textvariable=self.filepath)
         self.ButtonCancelFile = tk.Button(self.Labelframe4)
         self.ButtonCancelFile.place(relx=0.63, rely=0.6, height=24, width=50
-                , bordermode='ignore')
+                                    , bordermode='ignore')
         self.ButtonCancelFile.configure(activebackground="beige")
         self.ButtonCancelFile.configure(activeforeground="black")
         self.ButtonCancelFile.configure(background="#d9d9d9")
@@ -990,11 +993,11 @@ class Toplevel1:
         self.ButtonCancelFile.configure(text='''Cancel''')
         self.ButtonOpenFile = tk.Button(self.Labelframe4)
         self.ButtonOpenFile.place(relx=0.796, rely=0.6, height=24, width=50
-                , bordermode='ignore')
+                                  , bordermode='ignore')
         self.ButtonOpenFile.configure(activebackground="beige")
         self.ButtonOpenFile.configure(activeforeground="black")
         self.ButtonOpenFile.configure(background="#d9d9d9")
-        self.ButtonOpenFile.configure(command=lambda :pdrobot_support.cb_openFile(filepath))
+        self.ButtonOpenFile.configure(command=lambda: pdrobot_support.cb_openFile(self.filepath))
         self.ButtonOpenFile.configure(compound='left')
         self.ButtonOpenFile.configure(disabledforeground="#a3a3a3")
         self.ButtonOpenFile.configure(foreground="#000000")
@@ -1004,7 +1007,7 @@ class Toplevel1:
         self.ButtonOpenFile.configure(text='''Open''')
         self.ButtonRunProg = tk.Button(self.Labelframe4)
         self.ButtonRunProg.place(relx=0.13, rely=0.6, height=24, width=50
-                , bordermode='ignore')
+                                 , bordermode='ignore')
         self.ButtonRunProg.configure(activebackground="beige")
         self.ButtonRunProg.configure(activeforeground="black")
         self.ButtonRunProg.configure(background="#d9d9d9")
@@ -1019,7 +1022,7 @@ class Toplevel1:
         self.ButtonRunProg.configure(text='''Run''')
         self.ButtonStepProg = tk.Button(self.Labelframe4)
         self.ButtonStepProg.place(relx=0.259, rely=0.6, height=24, width=50
-                , bordermode='ignore')
+                                  , bordermode='ignore')
         self.ButtonStepProg.configure(activebackground="beige")
         self.ButtonStepProg.configure(activeforeground="black")
         self.ButtonStepProg.configure(background="#d9d9d9")
@@ -1034,7 +1037,7 @@ class Toplevel1:
         self.ButtonStepProg.configure(text='''Step''')
         self.ButtonSelectFile = tk.Button(self.Labelframe4)
         self.ButtonSelectFile.place(relx=0.907, rely=0.267, height=24, width=30
-                , bordermode='ignore')
+                                    , bordermode='ignore')
         self.ButtonSelectFile.configure(activebackground="beige")
         self.ButtonSelectFile.configure(activeforeground="black")
         self.ButtonSelectFile.configure(background="#d9d9d9")
@@ -1047,7 +1050,7 @@ class Toplevel1:
         self.ButtonSelectFile.configure(text='''...''')
         self.Labelframe5 = tk.LabelFrame(self.top)
         self.Labelframe5.place(relx=0.033, rely=0.614, relheight=0.236
-                , relwidth=0.35)
+                               , relwidth=0.35)
         self.Labelframe5.configure(relief='flat')
         self.Labelframe5.configure(font="-family {Segoe UI} -size 10 -weight bold")
         self.Labelframe5.configure(foreground="#000000")
@@ -1059,7 +1062,7 @@ class Toplevel1:
         _style_code()
         self.Scrolledtext1 = ScrolledText(self.Labelframe5)
         self.Scrolledtext1.place(relx=0.024, rely=0.152, relheight=0.818
-                , relwidth=0.929, bordermode='ignore')
+                                 , relwidth=0.929, bordermode='ignore')
         self.Scrolledtext1.configure(background="white")
         self.Scrolledtext1.configure(font="TkTextFont")
         self.Scrolledtext1.configure(foreground="black")
@@ -1072,9 +1075,13 @@ class Toplevel1:
         self.Scrolledtext1.configure(selectforeground="black")
         self.Scrolledtext1.configure(wrap="none")
 
+
 from time import time, localtime, strftime
+
+
 class ToolTip(tk.Toplevel):
     """ Provides a ToolTip widget for Tkinter. """
+
     def __init__(self, wdgt, msg=None, msgFunc=None, delay=0.5,
                  follow=True):
         self.wdgt = wdgt
@@ -1093,20 +1100,23 @@ class ToolTip(tk.Toplevel):
         self.visible = 0
         self.lastMotion = 0
         self.msg = tk.Message(self, textvariable=self.msgVar, bg=_bgcolor,
-                   fg=_fgcolor, font="TkDefaultFont",
-                   aspect=1000)
+                              fg=_fgcolor, font="TkDefaultFont",
+                              aspect=1000)
         self.msg.grid()
         self.wdgt.bind('<Enter>', self.spawn, '+')
         self.wdgt.bind('<Leave>', self.hide, '+')
         self.wdgt.bind('<Motion>', self.move, '+')
+
     def spawn(self, event=None):
         self.visible = 1
         self.after(int(self.delay * 1000), self.show)
+
     def show(self):
         if self.visible == 1 and time() - self.lastMotion > self.delay:
             self.visible = 2
         if self.visible == 2:
             self.deiconify()
+
     def move(self, event):
         self.lastMotion = time()
         if self.follow is False:
@@ -1118,11 +1128,14 @@ class ToolTip(tk.Toplevel):
         except:
             pass
         self.after(int(self.delay * 1000), self.show)
+
     def hide(self, event=None):
         self.visible = 0
         self.withdraw()
+
     def update(self, msg):
         self.msgVar.set(msg)
+
     def configure(self, **kwargs):
         backgroundset = False
         foregroundset = False
@@ -1159,7 +1172,7 @@ class ToolTip(tk.Toplevel):
         padxd = kwargs.pop('padx', 1)
         padyd = kwargs.pop('pady', 1)
         borderwidthd = kwargs.pop('borderwidth', 2)
-        wid = self.msg      # The message widget which is the actual tooltip
+        wid = self.msg  # The message widget which is the actual tooltip
         if backgroundset:
             wid.config(bg=background)
         if foregroundset:
@@ -1170,11 +1183,14 @@ class ToolTip(tk.Toplevel):
         wid.config(justify=justifyd)
         wid.config(padx=padxd)
         wid.config(pady=padyd)
+
+
 #                   End of Class ToolTip
 
 # The following code is added to facilitate the Scrolled widgets you specified.
 class AutoScroll(object):
     '''Configure the scrollbars for a widget.'''
+
     def __init__(self, master):
         #  Rozen. Added the try-except clauses so that this class
         #  could be used for scrolled entry widget for which vertical
@@ -1207,6 +1223,7 @@ class AutoScroll(object):
     @staticmethod
     def _autoscroll(sbar):
         '''Hide and show scrollbar as needed.'''
+
         def wrapped(first, last):
             first, last = float(first), float(last)
             if first <= 0 and last >= 1:
@@ -1214,30 +1231,39 @@ class AutoScroll(object):
             else:
                 sbar.grid()
             sbar.set(first, last)
+
         return wrapped
 
     def __str__(self):
         return str(self.master)
 
+
 def _create_container(func):
     '''Creates a ttk Frame with a given master, and use this new frame to
     place the scrollbars and the widget.'''
+
     def wrapped(cls, master, **kw):
         container = ttk.Frame(master)
         container.bind('<Enter>', lambda e: _bound_to_mousewheel(e, container))
         container.bind('<Leave>', lambda e: _unbound_to_mousewheel(e, container))
         return func(cls, container, **kw)
+
     return wrapped
+
 
 class ScrolledText(AutoScroll, tk.Text):
     '''A standard Tkinter Text widget with scrollbars that will
     automatically show/hide as needed.'''
+
     @_create_container
     def __init__(self, master, **kw):
         tk.Text.__init__(self, master, **kw)
         AutoScroll.__init__(self, master)
 
+
 import platform
+
+
 def _bound_to_mousewheel(event, widget):
     child = widget.winfo_children()[0]
     if platform.system() == 'Windows' or platform.system() == 'Darwin':
@@ -1249,6 +1275,7 @@ def _bound_to_mousewheel(event, widget):
         child.bind_all('<Shift-Button-4>', lambda e: _on_shiftmouse(e, child))
         child.bind_all('<Shift-Button-5>', lambda e: _on_shiftmouse(e, child))
 
+
 def _unbound_to_mousewheel(event, widget):
     if platform.system() == 'Windows' or platform.system() == 'Darwin':
         widget.unbind_all('<MouseWheel>')
@@ -1259,29 +1286,34 @@ def _unbound_to_mousewheel(event, widget):
         widget.unbind_all('<Shift-Button-4>')
         widget.unbind_all('<Shift-Button-5>')
 
+
 def _on_mousewheel(event, widget):
     if platform.system() == 'Windows':
-        widget.yview_scroll(-1*int(event.delta/120),'units')
+        widget.yview_scroll(-1 * int(event.delta / 120), 'units')
     elif platform.system() == 'Darwin':
-        widget.yview_scroll(-1*int(event.delta),'units')
+        widget.yview_scroll(-1 * int(event.delta), 'units')
     else:
         if event.num == 4:
             widget.yview_scroll(-1, 'units')
         elif event.num == 5:
             widget.yview_scroll(1, 'units')
 
+
 def _on_shiftmouse(event, widget):
     if platform.system() == 'Windows':
-        widget.xview_scroll(-1*int(event.delta/120), 'units')
+        widget.xview_scroll(-1 * int(event.delta / 120), 'units')
     elif platform.system() == 'Darwin':
-        widget.xview_scroll(-1*int(event.delta), 'units')
+        widget.xview_scroll(-1 * int(event.delta), 'units')
     else:
         if event.num == 4:
             widget.xview_scroll(-1, 'units')
         elif event.num == 5:
             widget.xview_scroll(1, 'units')
+
+
 def start_up():
     pdrobot_support.main()
+
 
 if __name__ == '__main__':
     pdrobot_support.main()
