@@ -74,23 +74,29 @@ class MyTestCase(unittest.TestCase):
 
     def test_cb_go(self):
         top = setup()
-        self.assertTrue("TODO test_cb_go")
+        top.set1_pos.set('10')
+        top.set1_rot.set('-200')
+        pds.cb_go(1, top.set1_pos, top.set1_rot)
+        self.assertEqual('10', top.absolutePos.get())
+        self.assertEqual('-200', top.absoluteRot.get())
 
     def test_cb_waypoint(self):
         top = setup()
-        pds.cb_waypoint(1, 10, 20)
+        top.absolutePos.set(10)
+        top.absoluteRot.set(20)
+        pds.cb_waypoint(1)
         self.assertEqual('10', top.set1_pos.get())
         self.assertEqual('20', top.set1_rot.get())
 
-        pds.cb_waypoint(2, 10, 20)
+        pds.cb_waypoint(2)
         self.assertEqual('10', top.set2_pos.get())
         self.assertEqual('20', top.set2_rot.get())
 
-        pds.cb_waypoint(3, 10, 20)
+        pds.cb_waypoint(3)
         self.assertEqual('10', top.set3_pos.get())
         self.assertEqual('20', top.set3_rot.get())
 
-        pds.cb_waypoint(4, 10, 20)
+        pds.cb_waypoint(4)
         self.assertEqual('10', top.set4_pos.get())
         self.assertEqual('20', top.set4_rot.get())
 
