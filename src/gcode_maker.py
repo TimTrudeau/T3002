@@ -23,12 +23,17 @@ def capture_serial_output_header(serialPort, outfile):
     response = serialPort.readline()
     while serialPort.inWaiting() > 0:
         response += serialPort.readline()
-    outfile.write(response.decode('utf-8'))
-    outfile.flush()
+    try:
+        outfile.write(response.decode('utf-8'))
+        outfile.flush()
+    except Exception as ex:
+        print(f'capture_serial_output {ex}')
+        return None
 
 
 @contextlib.contextmanager
 def open_serial_port(portnum, outfile=None):
+    serialport = None
     if os.name == 'nt':
         port = portnum
     else:
@@ -51,7 +56,8 @@ def open_serial_port(portnum, outfile=None):
         print(f'unknown {ex}')
         return None
     finally:
-        pass
+        if serialport is not None:
+            serialport.close()
 
 
 def _openSerialPort(comport):
@@ -87,10 +93,10 @@ class GCodeMaker:
 
 
     def send(self, command):
+        print(command)
         try:
             cmd = command + '\n'
             GCodeMaker.serialport.write(cmd.encode())
-            print(command)
             response = bytes('', 'utf-8')
             #time.sleep(.1)
             while 'ok' not in str(response):
@@ -113,7 +119,7 @@ class GCodeMaker:
         else:
             flow = gcode.flow.get('rotMaxFlow')
             speed = min(gcode.flow.get('rotMaxFlow'), flow * (value / 100))
-        return int(speed)
+        return float(speed)
 
     def go_home(self):
         self.send('M92 X700')
@@ -133,12 +139,12 @@ class GCodeMaker:
         self.send(_gcodes.get(gcode.RELATIVE))
 
     def move_lin(self, value, relative=False, speed=10):
-        sendstr = "{0}F{1:1d} X{2:5.3f}".format(_gcodes.get(gcode.MOVE), self.motorspeed(speed, 'X'), value)
+        sendstr = "{0}F{1:5.3f} X{2:5.3f}".format(_gcodes.get(gcode.MOVE), self.motorspeed(speed, 'X'), value)
         self.set_relative() if relative is True else self.set_absolute()
         self.send(sendstr)
 
     def move_rot(self, value, relative=False, speed=10):
-        sendstr = "{0}F{1:1d} Y{2:5.3f}".format(_gcodes.get(gcode.MOVE), self.motorspeed(speed, 'Y'), value)
+        sendstr = "{0}F{1:5.3f} Y{2:5.3f}".format(_gcodes.get(gcode.MOVE), self.motorspeed(speed, 'Y'), value)
         self.set_relative() if relative is True else self.set_absolute()
         self.send(sendstr)
 
