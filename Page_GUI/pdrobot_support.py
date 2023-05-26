@@ -10,21 +10,19 @@ import sys
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.constants import *
-
+from robot_serial_port import serial_port_manager
 import Page_GUI.pdrobot as pdrobot
 import SRC.gcode_maker as gm
 _debug = False  # False to eliminate debug printing from callback functions.
 
 global win, robbie, robotPort
 win = robbie = None
-robotPort = 'COM5'
 
 def main(top_win=None):
     """Main entry point for the application."""
     global robbie
-    robbie = gm.GCodeMaker(robotPort)
+    robbie = gm.GCodeMaker()
     if top_win is None:
-        gm.open_serial_port(robbie.serialport)
         global root
         root = tk.Tk()
         root.protocol('WM_DELETE_WINDOW', root.destroy)
@@ -32,7 +30,9 @@ def main(top_win=None):
         global _top1, win
         _top1 = root
         win = pdrobot.Toplevel1(_top1)
-        root.mainloop()
+        with serial_port_manager() as manager:
+            gm.GCodeMaker.serialport = manager
+            root.mainloop()
     else:
         win = top_win
 

@@ -1,11 +1,7 @@
-import contextlib
-import os
-import sys
-import time
-import serial
 
 import gcode
 from gcode import _gcodes
+from robot_serial_port import serial_port_manager, serialscan
 
 usable_gpio = [0, 3, 4, 13, 14, 15, 17, 18, 19, 20, 21, 22, 26]
 linlimit_io = 5
@@ -18,79 +14,15 @@ except Exception as e:
     print(f"GPIO UNAVAILABLE {e}")
     raise ImportError
 
-def capture_serial_output_header(serialPort, outfile):
-    time.sleep(1)
-    response = serialPort.readline()
-    while serialPort.inWaiting() > 0:
-        response += serialPort.readline()
-    try:
-        outfile.write(response.decode('utf-8'))
-        outfile.flush()
-    except Exception as ex:
-        print(f'capture_serial_output {ex}')
-        return None
-
-
-@contextlib.contextmanager
-def open_serial_port(portnum, outfile=None):
-    serialport = None
-    if os.name == 'nt':
-        port = portnum
-    else:
-        port = '/dev/ttyUSB0'
-    try:
-        serialPort = _openSerialPort(port)
-        print(f"GM Serial Port name={serialPort.name}.")
-        sys.stdout.flush()
-        if outfile is not None:
-            capture_serial_output_header(serialPort, outfile)
-        serialPort.flush()
-        yield serialPort
-    except ValueError as ex:
-        print(f"Serial Port parameter error={ex}")
-        return None
-    except (serial.SerialException, AttributeError) as ex:
-        print(f"Serial Port not found. {ex}")
-        return None
-    except Exception as ex:
-        print(f'unknown {ex}')
-        return None
-    finally:
-        if serialport is not None:
-            serialport.close()
-
-
-def _openSerialPort(comport):
-    """Opens the serial port name passed in comport. Returns the stream id"""
-    #debuglog.info("Check if serial module is available in sys {}".format(sys.modules["serial"]))
-    s = None
-    try:
-        s = serial.Serial(
-            port=comport,
-            baudrate=115200,
-            parity=serial.PARITY_NONE,
-            stopbits=serial.STOPBITS_ONE,
-            bytesize=serial.EIGHTBITS,
-            timeout=10,
-            write_timeout=10
-        )
-    except serial.SerialException as ex:
-        print(f"Failed to capture serial port: {ex}")
-        raise serial.SerialException
-    finally:
-        return s
-
 
 class GCodeMaker:
     serialport = None
 
-    def __init__(self, sport, outfile=None):
+    def __init__(self, outfile='junk.txt'):
+        serialscan()
         self.linear_limit = gcode.linlimit
         self.rotation_limit = gcode.rotatlimit
         self.outfile = outfile
-        if GCodeMaker.serialport is None:
-            GCodeMaker.serialport = sport
-
 
     def send(self, command):
         print(command)
@@ -98,7 +30,7 @@ class GCodeMaker:
             cmd = command + '\n'
             GCodeMaker.serialport.write(cmd.encode())
             response = bytes('', 'utf-8')
-            #time.sleep(.1)
+            # time.sleep(.1)
             while 'ok' not in str(response):
                 response += GCodeMaker.serialport.readline()
             response = response.decode('utf-8')
@@ -115,7 +47,7 @@ class GCodeMaker:
     def motorspeed(self, value, axis):
         if axis == 'X':
             flow = gcode.flow.get('linMaxFlow')
-            speed = min(gcode.flow.get('linMaxFlow'), flow * (value/100))
+            speed = min(gcode.flow.get('linMaxFlow'), flow * (value /100))
         else:
             flow = gcode.flow.get('rotMaxFlow')
             speed = min(gcode.flow.get('rotMaxFlow'), flow * (value / 100))
