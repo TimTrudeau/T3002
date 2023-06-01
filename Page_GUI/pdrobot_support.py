@@ -10,13 +10,16 @@ import sys
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.constants import *
-from robot_serial_port import serial_port_manager
+from SRC.robot_serial_port import serial_port_manager
+from SRC.gdfile_dialog import FileDialog
 import Page_GUI.pdrobot as pdrobot
 import SRC.gcode_maker as gm
+from interpreter import Interpreter, Lexer
 _debug = False  # False to eliminate debug printing from callback functions.
 
 global win, robbie, robotPort
 win = robbie = None
+
 
 def main(top_win=None):
     """Main entry point for the application."""
@@ -44,10 +47,13 @@ def cb_buttonHome(*args):
         for arg in args:
             print('    another arg:', arg)
         sys.stdout.flush()
-    if args[0] == 'LIN':
-        win.absolutePos.set(0)
-    if args[0] == 'ROT':
-        win.absoluteRot.set(0)
+    # For now go_home homes both axis
+    # if args[0] == 'LIN':
+    #     win.absolutePos.set(0)
+    # if args[0] == 'ROT':
+    #     win.absoluteRot.set(0)
+    win.absolutePos.set(0)
+    win.absoluteRot.set(0)
     robbie.go_home()
 
 
@@ -88,12 +94,29 @@ def cb_cancel_file(*args):
         sys.stdout.flush()
 
 
-def cb_openFile(*args):
+def cb_getFile(*args):
     if _debug:
         print('pdrobot_support.cb_openFile')
         for arg in args:
             print('    another arg:', arg)
         sys.stdout.flush()
+    pd_file = FileDialog()  #  Opens a file dialog picker
+    win.filepath = pd_file.get_file_dialog()
+
+def cb_open_program(*args):
+    if _debug:
+        print('pdrobot_support.cb_open_program')
+        for arg in args:
+            print('    another arg:', arg)
+        sys.stdout.flush()
+    try:
+        with open(win.filepath, 'r') as _filepath:
+            win.pd_source = _filepath.readlines()
+    except (FileExistsError, FileNotFoundError,):
+        pd_file = FileDialog()
+        win.filepath = pd_file.get_file_dialog()
+        with open(win.filepath, 'r') as _filepath:
+            win.pd_source = _filepath.readlines()
 
 
 def cb_run_program(*args):
@@ -102,7 +125,18 @@ def cb_run_program(*args):
         for arg in args:
             print('    another arg:', arg)
         sys.stdout.flush()
-
+    try:
+        lexer = Lexer(win.pd_source)
+        parser = Parser(lexer)
+        with open(options.out, 'w') as outfile:
+            interpreter = Interpreter(parser, port, outfile)
+            interpreter.interpret()
+    except Exception as ex:
+        print(f'{ex}')
+        if "yield" in ex.args[0]:
+            with open(options.out, 'w') as outfile:
+                interpreter = Interpreter(parser, None, outfile)
+                interpreter.interpret()
 
 def cb_scaleLinSpeed(*args):
     if _debug:
@@ -169,7 +203,7 @@ def cb_waypoint(*args):
         sys.stdout.flush()
     pos = win.absolutePos.get()
     rot = win.absoluteRot.get()
-    if args[0] == 1:
+    if args[0] == 1 and not win.set1_locked.get():
         win.set1_pos.set(pos)
         win.set1_rot.set(rot)
     elif args[0] == 2:
