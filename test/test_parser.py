@@ -1,9 +1,10 @@
-from SRC.parser import Parser
+
 
 import pytest
-from SRC.lexer import Lexer
-from SRC.lexer import Token as Token
-from SRC.token_types import *
+from interpreter.parser import Parser
+from interpreter.lexer import Lexer
+from interpreter.lexer import Token as Token
+from interpreter.token_types import *
 
 from test_lexer import makeLexer
 
@@ -18,8 +19,7 @@ If_expressions = [
 @pytest.mark.parametrize("expr, truestat, falsestat", If_expressions)
 def test_parse_if(expr, falsestat, truestat):
     # TODO IF should handle compound boolean statements
-    lexer = Lexer(expr)
-    parser = Parser(lexer)
+    parser = Parser(expr)
     node = parser.statement()
     assert node.token.type == IF
     result = node.true.children[0].right.value
@@ -34,8 +34,7 @@ def test_parse_if(expr, falsestat, truestat):
 def test_nested_if():
     # TODO IF should handle compound boolean statements (and, or)
     expr = ';IF 3 == 3:  \n aa := -22; \n IF 4 > 3: \n bb := 2; \n ENDIF;\n ELSE: \n cc := 66; \n ENDIF;'
-    lexer = Lexer(expr)
-    parser = Parser(lexer)
+    parser = Parser(expr)
     nodes = parser.statement_list()
     assert nodes is not None
     assert len(nodes) == 3
@@ -52,8 +51,8 @@ def test_nested_if():
 
 def test_parse_loop():
     # TODO UNTIL should handle compound boolean statements
-    lexer = makeLexer('LOOP:  \n count := count + 1; \n UNTIL (count > 100);\n')
-    parser = Parser(lexer)
+    statement = 'LOOP:  \n count := count + 1; \n UNTIL (count > 100);\n'
+    parser = Parser(statement)
     node = parser.statement()
     assert node.token.type == LOOP
     assert node.logicNode.left.value == 'count'
@@ -72,8 +71,8 @@ def varDecl_compare(node, value, type_):
 
 
 def test_variable_declaration():
-    lexer = makeLexer(' aa, bb, cc: INTEGER\n   x, y, z: REAL\n flag,tester: BOOL')
-    parser = Parser(lexer)
+    statement = ' aa, bb, cc: INTEGER\n   x, y, z: REAL\n flag,tester: BOOL'
+    parser = Parser(statement)
     nodes = parser.variable_declaration()
     assert len(nodes) == 3
     assert varDecl_compare(nodes[0], 'aa', INTEGER)
@@ -89,8 +88,8 @@ def test_variable_declaration():
 
 
 def test_term():
-    lexer = makeLexer('(33 + 45)*(4 >= 3)')
-    parser = Parser(lexer)
+    statement = '(33 + 45)*(4 >= 3)'
+    parser = Parser(statement)
     nodes = parser.term()
     assert 'BinOp' in str(type(nodes))
     assert nodes.left.left.value == 33
@@ -103,8 +102,8 @@ def test_term():
 
 
 def test_IO_declarations():
-    lexer = makeLexer('IO \nlimitx: PININ 6;\nlimity: PINOUT 7;\nlimitz: PININ 8;')
-    parser = Parser(lexer)
+    statement = 'IO \nlimitx: PININ 6;\nlimity: PINOUT 7;\nlimitz: PININ 8;'
+    parser = Parser(statement)
     node = parser.declarations()
     mylist = []
     for i in range(3):
@@ -148,8 +147,8 @@ def waypoint_compare(waypoint, datastr):
 
 
 def test_waypoint_declarations():
-    lexer = makeLexer('WAYPOINT \napproach := 250,90;\nopen := +0, (90*5);\ninsert:=-33.7,+0;')
-    parser = Parser(lexer)
+    statement = 'WAYPOINT \napproach := 250,90;\nopen := +0, (90*5);\ninsert:=-33.7,+0;'
+    parser = Parser(statement)
     node = parser.declarations()
     mylist = []
     for i in range(3):
@@ -168,8 +167,8 @@ def test_waypoint_declarations():
 points = ['100,(90*5)', 'newDistance,newSpeed', 'waypoint', '300,5', 'position,0', '-250,speed', '+10, 6']
 @pytest.mark.parametrize("moves", points)
 def test_moveto(moves):
-    lexer = makeLexer(f'MOVETO {moves};\n')
-    parser = Parser(lexer)
+    statement = f'MOVETO {moves};\n'
+    parser = Parser(statement)
     node = parser.moveto_statement()
     ds = moves.split(',')
     if type(node.value).__name__ == 'dict':
@@ -183,8 +182,8 @@ def test_moveto(moves):
 
 @pytest.mark.parametrize("moves", points)
 def test_rotate(moves):
-    lexer = makeLexer(f'ROTATE {moves};\n')
-    parser = Parser(lexer)
+    statement = f'ROTATE {moves};\n'
+    parser = Parser(statement)
     node = parser.rotate_statement()
     ds = moves.split(',')
     if type(node.value).__name__ == 'dict':
@@ -199,15 +198,15 @@ def test_rotate(moves):
 
 
 def test_home():
-    lexer = makeLexer('HOME;')
-    parser = Parser(lexer)
+    statement = 'HOME;'
+    parser = Parser(statement)
     nodelist = parser.statement_list()
     assert type(nodelist[0]).__name__ == 'Home'
 
 
 def test_stop():
-    lexer = makeLexer('STOP;')
-    parser = Parser(lexer)
+    statement = 'STOP;'
+    parser = Parser(statement)
     nodelist = parser.statement_list()
     assert type(nodelist[0]).__name__ == 'Stop'
 

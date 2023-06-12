@@ -1,6 +1,4 @@
 import unittest
-
-import pytest
 import tkinter as tk
 import Page_GUI.pdrobot as pdrobot
 import Page_GUI.pdrobot_support as pds

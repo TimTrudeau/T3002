@@ -1,5 +1,5 @@
 import pytest
-from token_types import *
+from interpreter.token_types import *
 
 
 def makeProgramSyntax(intAssign='345', realAssign='2.22', boolAssign='TRUE', syntax=None, breakcode=None):
@@ -29,12 +29,10 @@ def makeProgramSyntax(intAssign='345', realAssign='2.22', boolAssign='TRUE', syn
 
 
 def makeInterpreter(aprogram):
-    from SRC.lexer import Lexer
-    from SRC.parser import Parser
-    from SRC.interpreter import Interpreter
+    from interpreter.parser import Parser
+    from interpreter.interpreter import Interpreter
 
-    lexer = Lexer(aprogram)
-    parser = Parser(lexer)
+    parser = Parser(aprogram)
     interpreter = Interpreter(parser, None)
     return interpreter
 

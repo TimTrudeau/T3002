@@ -8,13 +8,7 @@
 import sys
 import tkinter as tk
 import tkinter.ttk as ttk
-from tkinter.constants import *
-import os.path
-
-_script = sys.argv[0]
-_location = os.path.dirname(_script)
-
-import pdrobot_support
+import Page_GUI.pdrobot_support as pdrobot_support
 
 _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
 _fgcolor = '#000000'  # X11 color: 'black'
@@ -80,14 +74,16 @@ class Toplevel1:
         self.set3_rot = tk.StringVar()
         self.set4_pos = tk.StringVar()
         self.set4_rot = tk.StringVar()
+        self.gcode_list_var = tk.StringVar()
+        self.dg_filename = tk.StringVar()
         self.speedLin = tk.DoubleVar()
         self.speedRot = tk.DoubleVar()
         self.set1_locked = tk.BooleanVar()
         self.set2_locked = tk.BooleanVar()
         self.set3_locked = tk.BooleanVar()
         self.set4_locked = tk.BooleanVar()
-        self.filepath = str()
-        self.pd_source = str()
+        self.source_file = str()
+        self.gcode_file = str()
 
         self.Labelframe1 = tk.LabelFrame(self.top)
         self.Labelframe1.place(relx=0.033, rely=0.014, relheight=0.193, relwidth=0.917)
@@ -1070,7 +1066,7 @@ class Toplevel1:
         self.EntryFile.configure(insertbackground="black")
         self.EntryFile.configure(selectbackground="#c4c4c4")
         self.EntryFile.configure(selectforeground="black")
-        self.EntryFile.configure(textvariable=self.filepath)
+        self.EntryFile.configure(textvariable=self.dg_filename)
 
         self.ButtonCancelFile = tk.Button(self.Labelframe4)
         self.ButtonCancelFile.place(relx=0.63, rely=0.6, height=24, width=50, bordermode='ignore')
@@ -1086,26 +1082,26 @@ class Toplevel1:
         self.ButtonCancelFile.configure(pady="0")
         self.ButtonCancelFile.configure(text='''Cancel''')
 
-        self.ButtonOpenFile = tk.Button(self.Labelframe4)
-        self.ButtonOpenFile.place(relx=0.796, rely=0.6, height=24, width=50, bordermode='ignore')
-        self.ButtonOpenFile.configure(activebackground="beige")
-        self.ButtonOpenFile.configure(activeforeground="black")
-        self.ButtonOpenFile.configure(background="#d9d9d9")
-        self.ButtonOpenFile.configure(command=lambda: pdrobot_support.cb_openFile(self.filepath))
-        self.ButtonOpenFile.configure(compound='left')
-        self.ButtonOpenFile.configure(disabledforeground="#a3a3a3")
-        self.ButtonOpenFile.configure(foreground="#000000")
-        self.ButtonOpenFile.configure(highlightbackground="#d9d9d9")
-        self.ButtonOpenFile.configure(highlightcolor="black")
-        self.ButtonOpenFile.configure(pady="0")
-        self.ButtonOpenFile.configure(text='''Open''')
+        self.ButtonexitFile = tk.Button(self.Labelframe4)
+        self.ButtonexitFile.place(relx=0.796, rely=0.6, height=24, width=50, bordermode='ignore')
+        self.ButtonexitFile.configure(activebackground="beige")
+        self.ButtonexitFile.configure(activeforeground="black")
+        self.ButtonexitFile.configure(background="#d9d9d9")
+        self.ButtonexitFile.configure(command=pdrobot_support.cb_exit_program)
+        self.ButtonexitFile.configure(compound='left')
+        self.ButtonexitFile.configure(disabledforeground="#a3a3a3")
+        self.ButtonexitFile.configure(foreground="#000000")
+        self.ButtonexitFile.configure(highlightbackground="#d9d9d9")
+        self.ButtonexitFile.configure(highlightcolor="black")
+        self.ButtonexitFile.configure(pady="0")
+        self.ButtonexitFile.configure(text='''Exit''')
 
         self.ButtonRunProg = tk.Button(self.Labelframe4)
         self.ButtonRunProg.place(relx=0.13, rely=0.6, height=24, width=50, bordermode='ignore')
         self.ButtonRunProg.configure(activebackground="beige")
         self.ButtonRunProg.configure(activeforeground="black")
         self.ButtonRunProg.configure(background="#d9d9d9")
-        self.ButtonRunProg.configure(command=pdrobot_support.cb_run_program)
+        self.ButtonRunProg.configure(command=lambda: pdrobot_support.cb_run_program(self.Listbox1))
         self.ButtonRunProg.configure(compound='left')
         self.ButtonRunProg.configure(disabledforeground="#a3a3a3")
         self.ButtonRunProg.configure(foreground="#000000")
@@ -1120,7 +1116,7 @@ class Toplevel1:
         self.ButtonStepProg.configure(activebackground="beige")
         self.ButtonStepProg.configure(activeforeground="black")
         self.ButtonStepProg.configure(background="#d9d9d9")
-        self.ButtonStepProg.configure(command=pdrobot_support.cb_step_program)
+        self.ButtonStepProg.configure(command=lambda: pdrobot_support.cb_step_program(self.Listbox1))
         self.ButtonStepProg.configure(compound='left')
         self.ButtonStepProg.configure(disabledforeground="#a3a3a3")
         self.ButtonStepProg.configure(foreground="#000000")
@@ -1135,7 +1131,7 @@ class Toplevel1:
         self.ButtonSelectFile.configure(activebackground="beige")
         self.ButtonSelectFile.configure(activeforeground="black")
         self.ButtonSelectFile.configure(background="#d9d9d9")
-        self.ButtonSelectFile.configure(command=pdrobot_support.cb_getFile)
+        self.ButtonSelectFile.configure(command=lambda: pdrobot_support.cb_getSourceFile(self.Listbox1))
         self.ButtonSelectFile.configure(compound='left')
         self.ButtonSelectFile.configure(disabledforeground="#a3a3a3")
         self.ButtonSelectFile.configure(foreground="#000000")
@@ -1155,19 +1151,24 @@ class Toplevel1:
         self.Labelframe5.configure(highlightbackground="#d9d9d9")
         self.Labelframe5.configure(highlightcolor="black")
 
-        self.Scrolledtext1 = ScrolledText(self.Labelframe5)
-        self.Scrolledtext1.place(relx=0.024, rely=0.152, relheight=0.818, relwidth=0.929, bordermode='ignore')
-        self.Scrolledtext1.configure(background="white")
-        self.Scrolledtext1.configure(font="TkTextFont")
-        self.Scrolledtext1.configure(foreground="black")
-        self.Scrolledtext1.configure(highlightbackground="#d9d9d9")
-        self.Scrolledtext1.configure(highlightcolor="black")
-        self.Scrolledtext1.configure(insertbackground="black")
-        self.Scrolledtext1.configure(insertborderwidth="3")
-        self.Scrolledtext1.configure(relief="flat")
-        self.Scrolledtext1.configure(selectbackground="#c4c4c4")
-        self.Scrolledtext1.configure(selectforeground="black")
-        self.Scrolledtext1.configure(wrap="none")
+        self.Listbox1 = tk.Listbox(self.Labelframe5)
+        self.Listbox1.place(relx=0.024, rely=0.152, relheight=0.818, relwidth=0.929, bordermode='ignore')
+        self.Listbox1.configure(activestyle="dotbox")
+        self.Listbox1.configure(background="white")
+        self.Listbox1.configure(disabledforeground="#a3a3a3")
+        self.Listbox1.configure(exportselection="0")
+        self.Listbox1.configure(font="TkFixedFont")
+        self.Listbox1.configure(foreground="#000000")
+        self.Listbox1.configure(highlightthickness="0")
+        self.Listbox1.configure(relief="groove")
+        self.Listbox1.configure(selectmode='single')
+        self.Listbox1.configure(listvariable=self.gcode_list_var)
+        self.Listbox1_tooltip = \
+            ToolTip(self.Listbox1, '''GCODE commands (Run or Step)''')
+        self.scrollbar = tk.Scrollbar(self.Labelframe5)
+        self.scrollbar.pack(side=tk.RIGHT, fill=tk.BOTH)
+        self.Listbox1.config(yscrollcommand=self.scrollbar.set)
+        self.scrollbar.config(command=self.Listbox1.yview)
 
 
 from time import time, localtime, strftime
@@ -1278,6 +1279,8 @@ class ToolTip(tk.Toplevel):
         wid.config(justify=justifyd)
         wid.config(padx=padxd)
         wid.config(pady=padyd)
+
+
 #       End of Class ToolTip
 
 # The following code is added to facilitate the Scrolled widgets you specified.
@@ -1326,6 +1329,7 @@ class AutoScroll(object):
             else:
                 sbar.grid()
             sbar.set(first, last)
+
         return wrapped
 
     def __str__(self):

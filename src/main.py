@@ -1,10 +1,16 @@
 """
-
+Interpreter for the NPD cycle tester robot
+Command line aruments:
+--file
+--com
+--out
+--step
+--version
+--debug
+--help
 """
-import gcode_maker
 from parser import Parser
 from lexer import Lexer
-from gcode_maker import open_serial_port
 from interpreter import Interpreter
 import argparse
 

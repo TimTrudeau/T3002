@@ -1,8 +1,7 @@
 import pytest
-from token_types import *
+from interpreter.token_types import *
 
 token_list = [
-    ('WAIT', WAIT, 'WAIT'),
     ('TRUE', BOOL_CONST, TRUE),
     ('FALSE', BOOL_CONST, FALSE),
     ('234', INTEGER_CONST, 234),
@@ -35,23 +34,25 @@ token_list = [
     ('number', ID, 'number'),
     ('BEGIN', BEGIN, 'BEGIN'),
     ('WAYPOINT', WAYPOINT, 'WAYPOINT'),
+    ('WAIT', WAIT, 'WAIT'),
     ('IO', IO, 'PIN'),
     ('END', END, 'END'),
 ]
 
 
 def makeLexer(text):
-    from lexer import Lexer
+    from interpreter.lexer import Lexer
     lexer = Lexer(text)
     return lexer
 
-
+#  This test fails when called from Run All Test because
 @pytest.mark.parametrize("text, tok_type, tok_val", token_list)
 def test_tokens(text, tok_type, tok_val):
     lexer = makeLexer(text)
     token = lexer.get_next_token()
     assert token.type == tok_type
     assert token.value == tok_val
+    del(lexer)
 
 
 def test_comment():

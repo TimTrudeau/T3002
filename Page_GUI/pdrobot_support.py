@@ -8,40 +8,39 @@
 """
 import sys
 import tkinter as tk
-import tkinter.ttk as ttk
-from tkinter.constants import *
-from SRC.robot_serial_port import serial_port_manager
-from SRC.gdfile_dialog import FileDialog
 import Page_GUI.pdrobot as pdrobot
-import SRC.gcode_maker as gm
-from interpreter import Interpreter, Lexer
+from tkinter.constants import *
+from SRC.gdfile_dialog import FileDialog
+from SRC.gcode_maker import GCodeMaker
+from interpreter.interpreter import Interpreter
+from interpreter.parser import Parser
+from pathlib import Path
+import time
+
 _debug = False  # False to eliminate debug printing from callback functions.
 
-global win, robbie, robotPort
-win = robbie = None
+# global win, robotPort
+win = None
+gm = GCodeMaker()
 
 
-def main(top_win=None):
+def main(toplevel=None):
     """Main entry point for the application."""
-    global robbie
-    robbie = gm.GCodeMaker()
-    if top_win is None:
+    if toplevel is None:
         global root
         root = tk.Tk()
         root.protocol('WM_DELETE_WINDOW', root.destroy)
         # Creates a toplevel widget.
-        global _top1, win
         _top1 = root
+        global win
         win = pdrobot.Toplevel1(_top1)
-        with serial_port_manager() as manager:
-            gm.GCodeMaker.serialport = manager
-            root.mainloop()
+        root.mainloop()
     else:
-        win = top_win
+        # toplevel provided by test
+        win = toplevel
 
 
 def cb_buttonHome(*args):
-    global robbie
     if _debug:
         print('pdrobot_support.cb_buttonHome')
         for arg in args:
@@ -54,11 +53,10 @@ def cb_buttonHome(*args):
     #     win.absoluteRot.set(0)
     win.absolutePos.set(0)
     win.absoluteRot.set(0)
-    robbie.go_home()
+    gm.go_home()
 
 
 def cb_buttonLin(*args):
-    global robbie
     if _debug:
         print('pdrobot_support.cb_buttonLin')
         for arg in args:
@@ -69,10 +67,10 @@ def cb_buttonLin(*args):
     val = 0 if val == "" else int(val)
     val += args[0]
     win.absolutePos.set(str(val))
-    robbie.move_lin(val, speed=speed)
+    gm.move_lin(val, speed=speed)
+
 
 def cb_buttonRot(*args):
-    global robbie
     if _debug:
         print('pdrobot_support.cb_buttonRot')
         for arg in args:
@@ -83,60 +81,8 @@ def cb_buttonRot(*args):
     val = 0 if val == "" else int(val)
     val += args[0]
     win.absoluteRot.set(str(val))
-    robbie.move_rot(val, speed=speed)
+    gm.move_rot(val, speed=speed)
 
-
-def cb_cancel_file(*args):
-    if _debug:
-        print('pdrobot_support.cb_cancel_file')
-        for arg in args:
-            print('    another arg:', arg)
-        sys.stdout.flush()
-
-
-def cb_getFile(*args):
-    if _debug:
-        print('pdrobot_support.cb_openFile')
-        for arg in args:
-            print('    another arg:', arg)
-        sys.stdout.flush()
-    pd_file = FileDialog()  #  Opens a file dialog picker
-    win.filepath = pd_file.get_file_dialog()
-
-def cb_open_program(*args):
-    if _debug:
-        print('pdrobot_support.cb_open_program')
-        for arg in args:
-            print('    another arg:', arg)
-        sys.stdout.flush()
-    try:
-        with open(win.filepath, 'r') as _filepath:
-            win.pd_source = _filepath.readlines()
-    except (FileExistsError, FileNotFoundError,):
-        pd_file = FileDialog()
-        win.filepath = pd_file.get_file_dialog()
-        with open(win.filepath, 'r') as _filepath:
-            win.pd_source = _filepath.readlines()
-
-
-def cb_run_program(*args):
-    if _debug:
-        print('pdrobot_support.cb_run_program')
-        for arg in args:
-            print('    another arg:', arg)
-        sys.stdout.flush()
-    try:
-        lexer = Lexer(win.pd_source)
-        parser = Parser(lexer)
-        with open(options.out, 'w') as outfile:
-            interpreter = Interpreter(parser, port, outfile)
-            interpreter.interpret()
-    except Exception as ex:
-        print(f'{ex}')
-        if "yield" in ex.args[0]:
-            with open(options.out, 'w') as outfile:
-                interpreter = Interpreter(parser, None, outfile)
-                interpreter.interpret()
 
 def cb_scaleLinSpeed(*args):
     if _debug:
@@ -146,6 +92,7 @@ def cb_scaleLinSpeed(*args):
         sys.stdout.flush()
     speed = float(args[0])
     win.speedLin.set(speed)
+
 
 def cb_scaleRotSpeed(*args):
     if _debug:
@@ -157,26 +104,13 @@ def cb_scaleRotSpeed(*args):
     win.speedRot.set(speed)
 
 
-def cb_step_program(*args):
-    if _debug:
-        print('pdrobot_support.cb_step_program')
-        for arg in args:
-            print('    another arg:', arg)
-        sys.stdout.flush()
-    try:
-        pass
-    except ValueError:
-        pass
-
-
-
 def cb_stop(*args):
     if _debug:
         print('pdrobot_support.cb_stop')
         for arg in args:
             print('    another arg:', arg)
         sys.stdout.flush()
-    robbie.stop()
+    gm.stop()
 
 
 def cb_go(*args):
@@ -188,12 +122,13 @@ def cb_go(*args):
     try:
         val = args[1].get()
         win.absolutePos.set(val)
-        robbie.move_lin(int(val), )
+        gm.move_lin(int(val), )
         val = args[2].get()
         win.absoluteRot.set(val)
-        robbie.move_rot(int(val))
+        gm.move_rot(int(val))
     except ValueError:
         pass
+
 
 def cb_waypoint(*args):
     if _debug:
@@ -215,6 +150,66 @@ def cb_waypoint(*args):
     elif args[0] == 4:
         win.set4_pos.set(pos)
         win.set4_rot.set(rot)
+
+
+def cb_cancel_file(*args):
+    win.filename.set("")
+
+
+def cb_getSourceFile(*args):
+    _listbox = args[0]
+    _pd_file = FileDialog()  # Opens a file dialog picker
+    _source_filepath = Path(_pd_file.get_file_dialog())
+    if _source_filepath.suffix == '.gcode':
+        target_file = str(_source_filepath)
+    else:
+        win.gcode_file = str(_source_filepath.with_suffix('.gcode'))
+        win.dg_filename.set(str(_source_filepath.name))  # Put file name in file widgit
+        _source = _source_filepath.read_text(encoding='utf-8')  # reads entire file
+        parser = Parser(_source)
+        interp = Interpreter(parser, outfile=win.gcode_file)
+        interp.interpret()
+        if not interp.gcode.outfile.closed:
+            interp.gcode.outfile.close()
+        target_file = interp.gcode.gcode_path
+    with open(target_file, 'r') as fp:
+        text = fp.readlines()
+        results = list(enumerate(text))
+    for index, item in results:
+        _listbox.insert(index, item)
+    _listbox.selection_set(0)
+    win.ButtonRunProg.configure(state='active')
+    win.ButtonStepProg.configure(state='active')
+
+
+def cb_run_program(*args):
+    listbox = args[0]
+    gcode = listbox.get(0)
+    GCodeMaker.serialport.write(bytes(gcode, 'utf-8'))
+    root.after(300, lambda: runnext(listbox))
+
+def cb_step_program(*args):
+    try:
+        _listbox = args[0]
+        index = _listbox.curselection()[0]
+        _listbox.selection_clear(index)
+        index += 1
+        _listbox.see(index)
+        gcode = _listbox.get(index)
+        GCodeMaker.serialport.write(bytes(gcode, 'utf-8'))
+        _listbox.selection_set(index)
+        return 1
+    except IndexError:
+        _listbox.selection_set(0)
+        return 0
+
+def runnext(_listbox):
+    if cb_step_program(_listbox):
+        root.after(300, lambda: runnext(_listbox))
+
+
+def cb_exit_program(*args):
+    root.destroy()
 
 
 if __name__ == '__main__':

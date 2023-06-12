@@ -1,7 +1,7 @@
-
 import gcode
 from gcode import _gcodes
-from robot_serial_port import serial_port_manager, serialscan
+# from robot_serial_port import serial_port_manager
+import robot_serial_port
 
 usable_gpio = [0, 3, 4, 13, 14, 15, 17, 18, 19, 20, 21, 22, 26]
 linlimit_io = 5
@@ -18,36 +18,59 @@ except Exception as e:
 class GCodeMaker:
     serialport = None
 
-    def __init__(self, outfile='junk.txt'):
-        serialscan()
+    def __init__(self, port=None, path: str = None):
+        """ The serial port and/or the output file name can be passed
+        in from the command line with the call to the Interpreter module.
+        """
+        if GCodeMaker.serialport is None:
+            portname = robot_serial_port.serialscan()[0]
+            GCodeMaker.serialport = robot_serial_port._openSerialPort(portname)
+            GCodeMaker.serialport.timeout = 1
+            print(f'GCodeMaker serial port {GCodeMaker.serialport} type {type(GCodeMaker.serialport)}\n')
         self.linear_limit = gcode.linlimit
         self.rotation_limit = gcode.rotatlimit
-        self.outfile = outfile
+        if path is None:
+            path = 'tmp.gcode'
+        self.gcode_path = path
+        self.outfile = open(self.gcode_path, 'w')
+
+
+    def run_gcode(self, path: str):
+        """Read in GCODE file and send to serial port.
+        --Called from either main or from GUI--.
+        """
+        try:
+            if path is None:
+                return
+            with open(path, 'r') as fp:
+                self.gcode = fp.readlines()
+            for line in self.gcode:
+                GCodeMaker.serialport.write(bytes(line, 'utf-8'))
+                while GCodeMaker.serialport.read() != 'OK':
+                    pass
+                pass
+        except FileExistsError as ex:
+            raise Exception(f'Run GCODE {ex}')
+
+    def close_outfile(self):
+        print(f'close_outfile {self.gcode_path} type {type(self.gcode_path)}\n')
+        self.outfile.close()
 
     def send(self, command):
-        print(command)
+        """ Send Interpreted commands to Output GCODE file.
+        """
+        print(f'Command={command}')
+        cmd = command + '\n'
+        GCodeMaker.serialport.write(bytes(command, 'utf-8'))
         try:
-            cmd = command + '\n'
-            GCodeMaker.serialport.write(cmd.encode())
-            response = bytes('', 'utf-8')
-            # time.sleep(.1)
-            while 'ok' not in str(response):
-                response += GCodeMaker.serialport.readline()
-            response = response.decode('utf-8')
-            return response
-
-        except AttributeError as ex:
-            response = '!!!'
-            print(f'{command} {response}')
-        if self.outfile is not None:
-            self.outfile.write(f'{command} ')
-            self.outfile.write(f'{response}\n')
-            self.outfile.flush()
+            self.outfile.write(cmd)
+        except (FileExistsError, AttributeError,) as ex:
+            raise Exception(f'send to outfile {ex}')
 
     def motorspeed(self, value, axis):
         if axis == 'X':
             flow = gcode.flow.get('linMaxFlow')
-            speed = min(gcode.flow.get('linMaxFlow'), flow * (value /100))
+            speed = min(gcode.flow.get('linMaxFlow'), flow * (value / 100))
         else:
             flow = gcode.flow.get('rotMaxFlow')
             speed = min(gcode.flow.get('rotMaxFlow'), flow * (value / 100))
@@ -64,7 +87,6 @@ class GCodeMaker:
     def set_absolute(self):
         self.relative_mode = False
         self.send(_gcodes.get(gcode.ABSOLUTE))
-
 
     def set_relative(self):
         self.relative_mode = True
@@ -90,7 +112,9 @@ class GCodeMaker:
 
     def get_position(self):
         sendstr = "{0}".format(_gcodes.get(gcode.GET_POS))
-        pos_ =  self.send(sendstr)
+        pos_ = self.send(sendstr)
         index_ = pos_.index('Z')
         print(f"MY INDEX {index_}")
         return pos_[:index_]
+
+
