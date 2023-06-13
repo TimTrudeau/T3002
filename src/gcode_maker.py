@@ -18,12 +18,15 @@ except Exception as e:
 class GCodeMaker:
     serialport = None
 
-    def __init__(self, port=None, path: str = None):
+    def __init__(self, port: str = None, path: str = None, run: bool = False):
         """ The serial port and/or the output file name can be passed
         in from the command line with the call to the Interpreter module.
         """
         if GCodeMaker.serialport is None:
-            portname = robot_serial_port.serialscan()[0]
+            if port is None:
+                portname = robot_serial_port.serialscan()[0]
+            else:
+                portname = port
             GCodeMaker.serialport = robot_serial_port._openSerialPort(portname)
             GCodeMaker.serialport.timeout = 1
             print(f'GCodeMaker serial port {GCodeMaker.serialport} type {type(GCodeMaker.serialport)}\n')
@@ -33,7 +36,7 @@ class GCodeMaker:
             path = 'tmp.gcode'
         self.gcode_path = path
         self.outfile = open(self.gcode_path, 'w')
-
+        self.run = run
 
     def run_gcode(self, path: str):
         """Read in GCODE file and send to serial port.
@@ -56,18 +59,19 @@ class GCodeMaker:
         print(f'close_outfile {self.gcode_path} type {type(self.gcode_path)}\n')
         self.outfile.close()
 
-    def send(self, command):
+    def send(self, command: str):
         """ Send Interpreted commands to Output GCODE file.
         """
         print(f'Command={command}')
         cmd = command + '\n'
-        GCodeMaker.serialport.write(bytes(command, 'utf-8'))
+        if self.run:
+            GCodeMaker.serialport.write(bytes(cmd, 'utf-8'))
         try:
             self.outfile.write(cmd)
         except (FileExistsError, AttributeError,) as ex:
             raise Exception(f'send to outfile {ex}')
 
-    def motorspeed(self, value, axis):
+    def motorspeed(self, value: float, axis: str):
         if axis == 'X':
             flow = gcode.flow.get('linMaxFlow')
             speed = min(gcode.flow.get('linMaxFlow'), flow * (value / 100))
@@ -92,17 +96,17 @@ class GCodeMaker:
         self.relative_mode = True
         self.send(_gcodes.get(gcode.RELATIVE))
 
-    def move_lin(self, value, relative=False, speed=10):
+    def move_lin(self, value: float, speed: int = 10, relative: bool = False):
         sendstr = "{0}F{1:5.3f} X{2:5.3f}".format(_gcodes.get(gcode.MOVE), self.motorspeed(speed, 'X'), value)
         self.set_relative() if relative is True else self.set_absolute()
         self.send(sendstr)
 
-    def move_rot(self, value, relative=False, speed=10):
+    def move_rot(self, value: float, speed: int = 10, relative: bool = False):
         sendstr = "{0}F{1:5.3f} Y{2:5.3f}".format(_gcodes.get(gcode.MOVE), self.motorspeed(speed, 'Y'), value)
         self.set_relative() if relative is True else self.set_absolute()
         self.send(sendstr)
 
-    def wait(self, value):
+    def wait(self, value: float):
         sendstr = "{0}S{1:5.3f}".format(_gcodes.get(gcode.WAIT), value)
         self.send(sendstr)
 
@@ -116,5 +120,3 @@ class GCodeMaker:
         index_ = pos_.index('Z')
         print(f"MY INDEX {index_}")
         return pos_[:index_]
-
-

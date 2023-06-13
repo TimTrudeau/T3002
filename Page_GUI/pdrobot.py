@@ -169,7 +169,7 @@ class Toplevel1:
         self.buttonBk01_tooltip = \
             ToolTip(self.buttonBk01, '''Immediate backward move 0.1mm relitive''')
 
-        self.scaleLinSpeed = tk.Scale(self.Labelframe2, from_=1.0, to=100.0, resolution=1.0)
+        self.scaleLinSpeed = tk.Scale(self.Labelframe2, from_=10, to=100.0, resolution=1.0)
         self.scaleLinSpeed.place(relx=0.182, rely=0.446, relheight=0.416, relwidth=0.545)
         self.scaleLinSpeed.configure(activebackground="beige")
         self.scaleLinSpeed.configure(background="#d9d9d9")
@@ -181,6 +181,7 @@ class Toplevel1:
         self.scaleLinSpeed.configure(orient="horizontal")
         self.scaleLinSpeed.configure(troughcolor="#d9d9d9")
         self.scaleLinSpeed.configure(variable=self.speedLin)
+        self.speedLin.set(100)
 
         self.Label1 = tk.Label(self.Labelframe2)
         self.Label1.place(relx=0.023, rely=0.644, height=18, width=34, bordermode='ignore')
@@ -450,7 +451,7 @@ class Toplevel1:
         self.buttonCCW1_tooltip = \
             ToolTip(self.buttonCCW1, '''Immedite CCW move 1° relative''')
 
-        self.scaleRotSpeed = tk.Scale(self.Labelframe2_2, from_=1.0, to=100.0, resolution=1.0)
+        self.scaleRotSpeed = tk.Scale(self.Labelframe2_2, from_=10, to=100.0, resolution=1.0)
         self.scaleRotSpeed.place(relx=0.182, rely=0.446, relheight=0.416, relwidth=0.545)
         self.scaleRotSpeed.configure(activebackground="beige")
         self.scaleRotSpeed.configure(background="#d9d9d9")
@@ -462,6 +463,7 @@ class Toplevel1:
         self.scaleRotSpeed.configure(orient="horizontal")
         self.scaleRotSpeed.configure(troughcolor="#d9d9d9")
         self.scaleRotSpeed.configure(variable=self.speedRot)
+        self.speedRot.set(100)
 
         self.Label1_2 = tk.Label(self.Labelframe2_2)
         self.Label1_2.place(relx=0.023, rely=0.644, height=18, width=34, bordermode='ignore')

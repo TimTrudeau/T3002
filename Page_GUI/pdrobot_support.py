@@ -9,12 +9,12 @@
 import sys
 import tkinter as tk
 import Page_GUI.pdrobot as pdrobot
-from tkinter.constants import *
 from SRC.gdfile_dialog import FileDialog
 from SRC.gcode_maker import GCodeMaker
 from interpreter.interpreter import Interpreter
 from interpreter.parser import Parser
 from pathlib import Path
+from SRC.gcode import flow
 import time
 
 _debug = False  # False to eliminate debug printing from callback functions.
@@ -24,7 +24,7 @@ win = None
 gm = GCodeMaker()
 
 
-def main(toplevel=None):
+def main(toplevel: object = None):
     """Main entry point for the application."""
     if toplevel is None:
         global root
@@ -122,10 +122,10 @@ def cb_go(*args):
     try:
         val = args[1].get()
         win.absolutePos.set(val)
-        gm.move_lin(int(val), )
+        gm.move_lin(int(val), win.speedLin.get())
         val = args[2].get()
         win.absoluteRot.set(val)
-        gm.move_rot(int(val))
+        gm.move_rot(int(val), win.speedRot.get())
     except ValueError:
         pass
 
@@ -185,7 +185,7 @@ def cb_getSourceFile(*args):
 def cb_run_program(*args):
     listbox = args[0]
     gcode = listbox.get(0)
-    GCodeMaker.serialport.write(bytes(gcode, 'utf-8'))
+    gm.send(gcode)
     root.after(300, lambda: runnext(listbox))
 
 def cb_step_program(*args):
@@ -196,14 +196,14 @@ def cb_step_program(*args):
         index += 1
         _listbox.see(index)
         gcode = _listbox.get(index)
-        GCodeMaker.serialport.write(bytes(gcode, 'utf-8'))
+        gm.send(gcode)
         _listbox.selection_set(index)
         return 1
     except IndexError:
         _listbox.selection_set(0)
         return 0
 
-def runnext(_listbox):
+def runnext(_listbox: object):
     if cb_step_program(_listbox):
         root.after(300, lambda: runnext(_listbox))
 
