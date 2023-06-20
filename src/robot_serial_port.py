@@ -4,7 +4,6 @@ from pathlib import Path
 import contextlib
 import os
 import sys
-import time
 
 
 def serialscan():
@@ -34,10 +33,9 @@ def list_ports():
         raise ex
     return portlist
 
-@contextlib.contextmanager
 def serial_port_manager(portname: str=None):
     if os.name == 'nt':
-        if portname is None:
+        if portname is None or portname == '':
             portlist = serialscan()
             portname = portlist[0]
     else:
@@ -47,7 +45,7 @@ def serial_port_manager(portname: str=None):
         print(f"GM Serial Port name={_serialport.name}.")
         sys.stdout.flush()
         _serialport.flush()
-        yield _serialport
+        return _serialport
     except ValueError as ex:
         print(f"Serial Port parameter error={ex}")
         return None
@@ -57,12 +55,8 @@ def serial_port_manager(portname: str=None):
     except Exception as ex:
         print(f'unknown {ex}')
         return None
-    finally:
-        print('Leave Serial Port open')
-        #_serialport.close()
 
-
-def _openSerialPort(comport):
+def _openSerialPort(comport: str):
     """Opens the serial port name passed in comport. Returns the stream id"""
     # debuglog.info("Check if serial module is available in sys {}".format(sys.modules["serial"]))
     s = None

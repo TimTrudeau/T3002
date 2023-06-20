@@ -14,8 +14,7 @@ from SRC.gcode_maker import GCodeMaker
 from interpreter.interpreter import Interpreter
 from interpreter.parser import Parser
 from pathlib import Path
-from SRC.gcode import flow
-import time
+from SRC.robot_serial_port import serial_port_manager
 
 _debug = False  # False to eliminate debug printing from callback functions.
 
@@ -23,21 +22,26 @@ _debug = False  # False to eliminate debug printing from callback functions.
 win = None
 gm = GCodeMaker()
 
-
 def main(toplevel: object = None):
-    """Main entry point for the application."""
+    """Main entry point for the application.
+    toplevel is None unless this is called by test routine
+    """
     if toplevel is None:
-        global root
-        root = tk.Tk()
-        root.protocol('WM_DELETE_WINDOW', root.destroy)
-        # Creates a toplevel widget.
-        _top1 = root
-        global win
-        win = pdrobot.Toplevel1(_top1)
-        root.mainloop()
+        try:
+            global root
+            root = tk.Tk()
+            root.protocol('WM_DELETE_WINDOW', root.destroy)
+            # Creates a toplevel widget.
+            _top1 = root
+            global win
+            win = pdrobot.Toplevel1(_top1)
+            root.mainloop()
+        finally:
+            gm.serialport.close()
     else:
         # toplevel provided by test
         win = toplevel
+        gm.serialport.close()
 
 
 def cb_buttonHome(*args):
@@ -64,9 +68,9 @@ def cb_buttonLin(*args):
         sys.stdout.flush()
     val = win.absolutePos.get()
     speed = win.speedLin.get()
-    val = 0 if val == "" else int(val)
+    val = 0 if val == "" else float(val)
     val += args[0]
-    win.absolutePos.set(str(val))
+    win.absolutePos.set(str(f'{val:3.2f}'))
     gm.move_lin(val, speed=speed)
 
 
@@ -151,6 +155,18 @@ def cb_waypoint(*args):
         win.set4_pos.set(pos)
         win.set4_rot.set(rot)
 
+def cb_serial_port_reset(*args):
+    try:
+        win.EntrySp.configure(foreground="black")
+        win.EntrySp.configure(background="green")
+        if gm.serialport is not None:
+            gm.serialport.close()
+        gm.serialport = serial_port_manager(win.serial_prt.get())
+        win.serial_prt.set(gm.serialport.name)
+    except Exception:
+        win.EntrySp.configure(foreground="#ff0000")
+        win.EntrySp.configure(background="white")
+
 
 def cb_cancel_file(*args):
     win.filename.set("")
@@ -193,11 +209,11 @@ def cb_step_program(*args):
         _listbox = args[0]
         index = _listbox.curselection()[0]
         _listbox.selection_clear(index)
-        index += 1
-        _listbox.see(index)
         gcode = _listbox.get(index)
         gm.send(gcode)
+        index += 1
         _listbox.selection_set(index)
+        _listbox.see(index)
         return 1
     except IndexError:
         _listbox.selection_set(0)

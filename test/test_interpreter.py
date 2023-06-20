@@ -50,10 +50,15 @@ Wait_expressions = [
 @pytest.mark.parametrize("expr, answer", Wait_expressions)
 def test_parse_wait(expr, answer):
     interpreter = makeInterpreter(expr)
-    node = interpreter.parser.wait_statement()
-    results = interpreter.visit(node)
-    assert node.token.type == WAIT
-    assert results == answer
+    node1 = interpreter.parser.wait_statement()
+    result1 = interpreter.visit(node1)
+    interpreter.parser('WAIT 1;')
+    node2 = interpreter.parser.wait_statement()
+    result2 = interpreter.visit(node2)
+    assert node1.token.type == WAIT
+    assert result1 == answer
+    assert node1.token.type == WAIT
+    assert result2 == 1
     pass
 
 

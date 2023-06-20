@@ -1,3 +1,4 @@
+
 import gcode
 from gcode import _gcodes
 # from robot_serial_port import serial_port_manager
@@ -18,16 +19,12 @@ except Exception as e:
 class GCodeMaker:
     serialport = None
 
-    def __init__(self, port: str = None, path: str = None, run: bool = False):
+    def __init__(self, port: str = None, path: str = None, run: bool = True):
         """ The serial port and/or the output file name can be passed
         in from the command line with the call to the Interpreter module.
         """
         if GCodeMaker.serialport is None:
-            if port is None:
-                portname = robot_serial_port.serialscan()[0]
-            else:
-                portname = port
-            GCodeMaker.serialport = robot_serial_port._openSerialPort(portname)
+            GCodeMaker.serialport = robot_serial_port.serial_port_manager(port)
             GCodeMaker.serialport.timeout = 1
             print(f'GCodeMaker serial port {GCodeMaker.serialport} type {type(GCodeMaker.serialport)}\n')
         self.linear_limit = gcode.linlimit
