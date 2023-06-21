@@ -10,8 +10,8 @@
 ###############################################################################
 
 # from __init__ import logger
-import SRC.gcode_maker
-from interpreter.token_types import *
+import src.gcode_maker
+from src.interpreter.token_types import *
 
 class NodeVisitor(object):
     def __init__(self):

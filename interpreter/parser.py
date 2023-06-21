@@ -10,7 +10,7 @@
 ###############################################################################
 from .lexer import Lexer
 from .lexer import Token as Token
-from interpreter.token_types import *
+from .token_types import *
 
 class AST(object):
     """ Base class for all node entities

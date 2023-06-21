@@ -6,7 +6,7 @@
 #  First Pass                                                                           #
 ###############################################################################
 
-from interpreter.token_types import *
+from src.interpreter.token_types import *
 
 class Token(object):
     """Tokens contain a type and a value"""

@@ -8,34 +8,43 @@
 """
 import sys
 import tkinter as tk
-import Page_GUI.pdrobot as pdrobot
-from SRC.gdfile_dialog import FileDialog
-from SRC.gcode_maker import GCodeMaker
-from interpreter.interpreter import Interpreter
-from interpreter.parser import Parser
+system_packages = set(sys.modules.keys())
+
+#import .pdrobot as pdrobot
+import src.Page_GUI.pdrobot as pdrobot
+from src.gdfile_dialog import FileDialog
+from src.gcode_maker import GCodeMaker
+from src.interpreter.interpreter import Interpreter
+from src.interpreter.parser import Parser
 from pathlib import Path
-from SRC.robot_serial_port import serial_port_manager
+from src.robot_serial_port import serial_port_manager
 
 _debug = False  # False to eliminate debug printing from callback functions.
 
-# global win, robotPort
-win = None
+# GLOBALS
 gm = GCodeMaker()
+win = None
+print (f'!!!!!!!!!!!win={id(win)} {win}')
+
 
 def main(toplevel: object = None):
     """Main entry point for the application.
     toplevel is None unless this is called by test routine
     """
+    print(set(sys.modules.keys()) - system_packages)
+    global win
+    print (f'!!!!!!!!!!!win={id(win)} {win}')
     if toplevel is None:
         try:
-            global root
             root = tk.Tk()
             root.protocol('WM_DELETE_WINDOW', root.destroy)
+            win = pdrobot.Toplevel1(root)
+            print (f'&&&&&&&&&&win={id(win)}  {win}')
+
             # Creates a toplevel widget.
-            _top1 = root
-            global win
-            win = pdrobot.Toplevel1(_top1)
+
             root.mainloop()
+
         finally:
             gm.serialport.close()
     else:
@@ -45,11 +54,6 @@ def main(toplevel: object = None):
 
 
 def cb_buttonHome(*args):
-    if _debug:
-        print('pdrobot_support.cb_buttonHome')
-        for arg in args:
-            print('    another arg:', arg)
-        sys.stdout.flush()
     # For now go_home homes both axis
     # if args[0] == 'LIN':
     #     win.absolutePos.set(0)
@@ -61,11 +65,7 @@ def cb_buttonHome(*args):
 
 
 def cb_buttonLin(*args):
-    if _debug:
-        print('pdrobot_support.cb_buttonLin')
-        for arg in args:
-            print('    another arg:', arg)
-        sys.stdout.flush()
+    global win
     val = win.absolutePos.get()
     speed = win.speedLin.get()
     val = 0 if val == "" else float(val)
@@ -75,11 +75,7 @@ def cb_buttonLin(*args):
 
 
 def cb_buttonRot(*args):
-    if _debug:
-        print('pdrobot_support.cb_buttonRot')
-        for arg in args:
-            print('    another arg:', arg)
-        sys.stdout.flush()
+    global win
     val = win.absoluteRot.get()
     speed = win.speedRot.get()
     val = 0 if val == "" else int(val)
@@ -89,40 +85,26 @@ def cb_buttonRot(*args):
 
 
 def cb_scaleLinSpeed(*args):
-    if _debug:
-        print('pdrobot_support.cb_scaleLinSpeed')
-        for arg in args:
-            print('    another arg:', arg)
-        sys.stdout.flush()
+    global win
     speed = float(args[0])
+    print(f'lin speed {speed} {args}')
     win.speedLin.set(speed)
 
 
 def cb_scaleRotSpeed(*args):
-    if _debug:
-        print('pdrobot_support.cb_scaleRotSpeed')
-        for arg in args:
-            print('    another arg:', arg)
-        sys.stdout.flush()
+    global win
     speed = float(args[0])
+    print(f'rot speed {speed} {args}')
     win.speedRot.set(speed)
 
 
 def cb_stop(*args):
-    if _debug:
-        print('pdrobot_support.cb_stop')
-        for arg in args:
-            print('    another arg:', arg)
-        sys.stdout.flush()
-    gm.stop()
+     gm.stop()
 
 
 def cb_go(*args):
-    if _debug:
-        print('pdrobot_support.cb_go')
-        for arg in args:
-            print('    another arg:', arg)
-        sys.stdout.flush()
+    global win
+ 
     try:
         val = args[1].get()
         win.absolutePos.set(val)
@@ -135,11 +117,7 @@ def cb_go(*args):
 
 
 def cb_waypoint(*args):
-    if _debug:
-        print('pdrobot_support.cb_waypoint')
-        for arg in args:
-            print('    another arg:', arg)
-        sys.stdout.flush()
+    global win
     pos = win.absolutePos.get()
     rot = win.absoluteRot.get()
     if args[0] == 1 and not win.set1_locked.get():
@@ -156,6 +134,7 @@ def cb_waypoint(*args):
         win.set4_rot.set(rot)
 
 def cb_serial_port_reset(*args):
+    global win
     try:
         win.EntrySp.configure(foreground="black")
         win.EntrySp.configure(background="green")
@@ -169,10 +148,12 @@ def cb_serial_port_reset(*args):
 
 
 def cb_cancel_file(*args):
+    global win
     win.filename.set("")
 
 
 def cb_getSourceFile(*args):
+    global win
     _listbox = args[0]
     _pd_file = FileDialog()  # Opens a file dialog picker
     _source_filepath = Path(_pd_file.get_file_dialog())

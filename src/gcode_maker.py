@@ -1,8 +1,8 @@
 
-import gcode
-from gcode import _gcodes
+import src.gcode as gcode
+from src.gcode import _gcodes
 # from robot_serial_port import serial_port_manager
-import robot_serial_port
+import src.robot_serial_port as robot_serial_port
 
 usable_gpio = [0, 3, 4, 13, 14, 15, 17, 18, 19, 20, 21, 22, 26]
 linlimit_io = 5

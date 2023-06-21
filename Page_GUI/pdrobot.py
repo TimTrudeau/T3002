@@ -8,7 +8,7 @@
 import sys
 import tkinter as tk
 import tkinter.ttk as ttk
-import Page_GUI.pdrobot_support as pdrobot_support
+import src.Page_GUI.pdrobot_support as pdrobot_support
 
 _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
 _fgcolor = '#000000'  # X11 color: 'black'
@@ -174,7 +174,8 @@ class Toplevel1:
         self.scaleLinSpeed.place(relx=0.182, rely=0.446, relheight=0.416, relwidth=0.545)
         self.scaleLinSpeed.configure(activebackground="beige")
         self.scaleLinSpeed.configure(background="#d9d9d9")
-        self.scaleLinSpeed.configure(command=lambda v: pdrobot_support.cb_scaleLinSpeed(v))
+#        self.scaleLinSpeed.configure(command=lambda v: pdrobot_support.cb_scaleLinSpeed(v))
+        self.scaleLinSpeed.configure(command=pdrobot_support.cb_scaleLinSpeed)
         self.scaleLinSpeed.configure(foreground="#000000")
         self.scaleLinSpeed.configure(highlightbackground="#d9d9d9")
         self.scaleLinSpeed.configure(highlightcolor="black")
