@@ -61,8 +61,12 @@ class GCodeMaker:
         """
         print(f'Command={command}')
         cmd = command + '\n'
-        if self.run:
-            GCodeMaker.serialport.write(bytes(cmd, 'utf-8'))
+        try:
+            if self.run:
+                GCodeMaker.serialport.write(bytes(cmd, 'utf-8'))
+        except Exception as ex:
+            print(f'exception from serialport write {ex}')
+
         try:
             self.outfile.write(cmd)
         except (FileExistsError, AttributeError,) as ex:

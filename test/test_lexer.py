@@ -1,5 +1,4 @@
 import pytest
-from interpreter.token_types import *
 
 token_list = [
     ('TRUE', BOOL_CONST, TRUE),

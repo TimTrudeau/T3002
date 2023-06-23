@@ -1,5 +1,4 @@
 import pytest
-from interpreter.token_types import *
 
 
 def makeProgramSyntax(intAssign='345', realAssign='2.22', boolAssign='TRUE', syntax=None, breakcode=None):
@@ -29,7 +28,7 @@ def makeProgramSyntax(intAssign='345', realAssign='2.22', boolAssign='TRUE', syn
 
 
 def makeInterpreter(aprogram):
-    from interpreter.parser import Parser
+    from interpreter import Parser
     from interpreter.interpreter import Interpreter
 
     parser = Parser(aprogram)
