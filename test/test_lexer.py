@@ -1,4 +1,7 @@
 import pytest
+import contextlib
+from interpreter.lexer import Lexer
+from interpreter.token_types import *
 
 token_list = [
     ('TRUE', BOOL_CONST, TRUE),
@@ -38,59 +41,108 @@ token_list = [
     ('END', END, 'END'),
 ]
 
-
+@contextlib.contextmanager
 def makeLexer(text):
-    from interpreter.lexer import Lexer
-    lexer = Lexer(text)
-    return lexer
+    try:
+        lexer = Lexer(text)
+        yield lexer
+    finally:
+        del lexer
 
 #  This test fails when called from Run All Test because
 @pytest.mark.parametrize("text, tok_type, tok_val", token_list)
 def test_tokens(text, tok_type, tok_val):
-    lexer = makeLexer(text)
-    token = lexer.get_next_token()
-    assert token.type == tok_type
-    assert token.value == tok_val
-    del(lexer)
+    with makeLexer(text) as lexer:
+        token = lexer.get_next_token()
+        assert token.type == tok_type
+        assert token.value == tok_val
 
+def test_init():
+    # create a lexer object with some text
+    lex = Lexer("hello")
+    # assert that the attributes are initialized correctly
+    assert lex.text == "hello"
+    assert lex.line_count == 0
+    assert lex.line_pos == 0
+    assert lex.pos == 0
+    assert lex.current_char == "h"
+
+def test_advance():
+    # create a lexer object with some text
+    lex = Lexer("hello")
+    # call the advance method on the lexer object
+    lex.advance()
+    # assert that the pos and line_pos are incremented by 1
+    assert lex.pos == 1
+    assert lex.line_pos == 1
+    # assert that the current_char is updated to the next character in the text
+    assert lex.current_char == "e"
+    # call the advance method again until the end of input is reached
+    for _ in range(len(lex.text) - 1):
+        lex.advance()
+    # assert that the current_char is None when the end of input is reached
+    assert lex.current_char is None
 
 def test_comment():
-    lexer = makeLexer('{this is a comment}  \n')
-    try:
-        lexer.get_next_token()
-    except Exception as ex:
-        assert False, f"Comment test failed {ex}"
+    text = '{this is a comment}  \n'
+    with makeLexer(text) as lexer:
+        try:
+            lexer.get_next_token()
+        except Exception as ex:
+            assert False, f"Comment test failed {ex}"
 
-    with pytest.raises(Exception):
-        lexer = makeLexer('{missing closing brace  \n')
-        lexer.skip_comment()
+        with pytest.raises(Exception):
+            lexer = makeLexer('{missing closing brace  \n')
+            lexer.skip_comment()
 
 def test_number():
-    lexer = makeLexer('12345  )))')
-    token = lexer.number()
-    assert token.type == 'INTEGER_CONST'
-    assert token.value == 12345
+    text = '12345  )))'
+    with makeLexer(text) as lexer:
+        token = lexer.number()
+        assert token.type == 'INTEGER_CONST'
+        assert token.value == 12345
 
-    lexer = makeLexer('123.45')
-    token = lexer.number()
-    assert token.type == 'REAL_CONST'
-    assert token.value == 1.2345e+2
+    text = '123.45'
+    with makeLexer(text) as lexer:
+        token = lexer.number()
+        assert token.type == 'REAL_CONST'
+        assert token.value == 1.2345e+2
 
 def test_get_next_token():
-    lexer = makeLexer('  !=  ')
-    token = lexer.get_next_token()
-    assert token.type == NEQUAL
-    lexer = makeLexer('  ==  ')
-    token = lexer.get_next_token()
-    assert token.type == EQUAL
-    lexer = makeLexer('  <= ')
-    token = lexer.get_next_token()
-    assert token.type == LTE
-    with pytest.raises(ValueError):
-        lexer = makeLexer('  @')
-        _ = lexer.get_next_token()
-    assert lexer.line_count == 0
-    assert lexer.line_pos == 2
+    text = '  !=  '
+    with makeLexer(text) as lexer:
+        token = lexer.get_next_token()
+        assert token.type == NEQUAL
+    text = '  ==  '
+    with makeLexer(text) as lexer:
+        token = lexer.get_next_token()
+        assert token.type == EQUAL
+    text = '  <= '
+    with makeLexer(text) as lexer:
+        token = lexer.get_next_token()
+        assert token.type == LTE
+    text = '  >= '
+    with makeLexer(text) as lexer:
+        token = lexer.get_next_token()
+        assert token.type == GTE
+    text = '  <= '
+    with makeLexer(text) as lexer:
+        token = lexer.get_next_token()
+        assert token.type == LTE
+    text = '  <= '
+    with makeLexer(text) as lexer:
+        token = lexer.get_next_token()
+        assert token.type == LTE
+    text = '  <= '
+    with makeLexer(text) as lexer:
+        token = lexer.get_next_token()
+        assert token.type == LTE
+    text = '  @'
+    with makeLexer(text) as lexer:
+        with pytest.raises(ValueError):
+            _ = lexer.get_next_token()
+        assert lexer.line_count == 0
+        assert lexer.line_pos == 2
 
 if __name__ == '__main__':
     pytest.main()
