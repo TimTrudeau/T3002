@@ -45,6 +45,8 @@ def serial_port_manager(portname: str=None):
         print(f"GM Serial Port name={_serialport.name}.")
         sys.stdout.flush()
         _serialport.flush()
+        if _serialport.isatty(): print('This is a TTY')
+        if not _serialport.isOpen(): print(f'serial port not open {_serialport}')
         return _serialport
     except ValueError as ex:
         print(f"Serial Port parameter error={ex}")

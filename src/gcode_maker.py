@@ -23,6 +23,7 @@ class GCodeMaker:
         """ The serial port and/or the output file name can be passed
         in from the command line with the call to the Interpreter module.
         """
+        self.run = run
         if GCodeMaker.serialport is None:
             GCodeMaker.serialport = robot_serial_port.serial_port_manager(port)
             GCodeMaker.serialport.timeout = 1
@@ -33,7 +34,10 @@ class GCodeMaker:
             path = 'tmp.gcode'
         self.gcode_path = path
         self.outfile = open(self.gcode_path, 'w')
-        self.run = run
+        self.send(f'M92 X{gcode.linsteps_per_mm} Y{gcode.rotsteps_per_degree}')
+        self.send('M503')
+
+
 
     def run_gcode(self, path: str):
         """Read in GCODE file and send to serial port.
@@ -46,8 +50,8 @@ class GCodeMaker:
                 self.gcode = fp.readlines()
             for line in self.gcode:
                 GCodeMaker.serialport.write(bytes(line, 'utf-8'))
-                while GCodeMaker.serialport.read() != 'OK':
-                    pass
+                while GCodeMaker.serialport.readline().decode().strip() != 'ok':
+                    pass # Serial port will time_out if nothing returned.
                 pass
         except FileExistsError as ex:
             raise Exception(f'Run GCODE {ex}')
@@ -64,6 +68,10 @@ class GCodeMaker:
         try:
             if self.run:
                 GCodeMaker.serialport.write(bytes(cmd, 'utf-8'))
+                reply = ''
+                while reply != 'ok':
+                    reply = GCodeMaker.serialport.readline().decode().strip()
+                    print(f'{reply}')
         except Exception as ex:
             print(f'exception from serialport write {ex}')
 
@@ -75,16 +83,14 @@ class GCodeMaker:
     def motorspeed(self, value: float, axis: str):
         if axis == 'X':
             flow = gcode.flow.get('linMaxFlow')
-            speed = min(gcode.flow.get('linMaxFlow'), flow * (value / 100))
+            speed = min(flow, flow * (value / 100))
         else:
             flow = gcode.flow.get('rotMaxFlow')
-            speed = min(gcode.flow.get('rotMaxFlow'), flow * (value / 100))
+            speed = min(flow, flow * (value / 100))
         return float(speed)
 
     def go_home(self):
-        self.send('M92 X700')
         self.send(_gcodes.get(gcode.HOME))
-        self.send('M92 X1670')
 
     def stop(self):
         self.send(_gcodes.get(gcode.STOP))

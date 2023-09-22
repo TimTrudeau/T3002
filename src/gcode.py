@@ -1,7 +1,8 @@
-linlimit = 350
+linlimit = 280
 rotatlimit = 360
-flow = {'linMaxFlow': 1300, 'rotMaxFlow': 15000}
-
+flow = {'linMaxFlow': 5000, 'rotMaxFlow': 5000}
+linsteps_per_mm = 800
+rotsteps_per_degree = 35
 
 HOME     = 'HOME'
 ABSOLUTE = 'ABSOLUTE'
