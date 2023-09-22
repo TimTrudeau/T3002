@@ -2,7 +2,7 @@
 import src.gcode as gcode
 from src.gcode import _gcodes
 import src.robot_serial_port as robot_serial_port
-#from src.Page_GUI.pdrobot_support import top_win.Entry
+from serial.serialutil import SerialTimeoutException, SerialException
 usable_gpio = [0, 3, 4, 13, 14, 15, 17, 18, 19, 20, 21, 22, 26]
 linlimit_io = 5
 rotatlimit_io = 6
@@ -26,7 +26,7 @@ class GCodeMaker:
         try:
             if GCodeMaker.serialport is None:
                 GCodeMaker.serialport = robot_serial_port.serial_port_manager(port)
-                GCodeMaker.serialport.timeout = 1
+                GCodeMaker.serialport.timeout = 2
                 print(f'GCodeMaker serial port {GCodeMaker.serialport} type {type(GCodeMaker.serialport)}\n')
         except AttributeError as ee:
             print(f'No serial port found: {ee}')
@@ -42,7 +42,7 @@ class GCodeMaker:
 
 
 
-    def run_gcode(self, path: str):
+    def run_gcode(self, path: str) -> None:
         """Read in GCODE file and send to serial port.
         --Called from either main or from GUI--.
         """
@@ -53,17 +53,18 @@ class GCodeMaker:
                 self.gcode = fp.readlines()
             for line in self.gcode:
                 GCodeMaker.serialport.write(bytes(line, 'utf-8'))
-                while GCodeMaker.serialport.readline().decode().strip() != 'ok':
-                    pass # Serial port will time_out if nothing returned.
-                pass
-        except FileExistsError as ex:
+                reply = GCodeMaker.serialport.readline().decode().strip()
+                if not reply:
+                    raise SerialTimeoutException("Serial Port Timed out during ")
+
+        except (FileExistsError, SerialTimeoutException) as ex:
             raise Exception(f'Run GCODE {ex}')
 
-    def close_outfile(self):
+    def close_outfile(self) -> None:
         print(f'close_outfile {self.gcode_path} type {type(self.gcode_path)}\n')
         self.outfile.close()
 
-    def send(self, command: str):
+    def send(self, command: str) -> str:
         """ Send Interpreted commands to Output GCODE file.
         """
         print(f'Command={command}')
@@ -71,19 +72,19 @@ class GCodeMaker:
         try:
             if self.run:
                 GCodeMaker.serialport.write(bytes(cmd, 'utf-8'))
-                reply = ''
-                while reply != 'ok':
-                    reply = GCodeMaker.serialport.readline().decode().strip()
-                    print(f'{reply}')
-        except Exception as ex:
-            print(f'exception from serialport write: {ex}')
-
+                reply = GCodeMaker.serialport.readline().decode().strip()
+                if not reply:
+                    return "bad"
+        except (SerialException) as ex:
+            print(f'write exception from serialport: {ex}')
         try:
             self.outfile.write(cmd)
         except (FileExistsError, AttributeError,) as ex:
             raise Exception(f'send to outfile {ex}')
+        finally:
+            return ""
 
-    def motorspeed(self, value: float, axis: str):
+    def motorspeed(self, value: float, axis: str) -> float:
         if axis == 'X':
             flow = gcode.flow.get('linMaxFlow')
             speed = min(flow, flow * (value / 100))
@@ -92,39 +93,39 @@ class GCodeMaker:
             speed = min(flow, flow * (value / 100))
         return float(speed)
 
-    def go_home(self):
+    def go_home(self) -> None:
         self.send(_gcodes.get(gcode.HOME))
 
-    def stop(self):
+    def stop(self) -> None:
         self.send(_gcodes.get(gcode.STOP))
 
-    def set_absolute(self):
+    def set_absolute(self) -> None:
         self.relative_mode = False
         self.send(_gcodes.get(gcode.ABSOLUTE))
 
-    def set_relative(self):
+    def set_relative(self) -> None:
         self.relative_mode = True
         self.send(_gcodes.get(gcode.RELATIVE))
 
-    def move_lin(self, value: float, speed: int = 10, relative: bool = False):
+    def move_lin(self, value: float, speed: int = 10, relative: bool = False) -> None:
         sendstr = "{0}F{1:5.3f} X{2:5.3f}".format(_gcodes.get(gcode.MOVE), self.motorspeed(speed, 'X'), value)
         self.set_relative() if relative is True else self.set_absolute()
         self.send(sendstr)
 
-    def move_rot(self, value: float, speed: int = 10, relative: bool = False):
+    def move_rot(self, value: float, speed: int = 10, relative: bool = False) -> None:
         sendstr = "{0}F{1:5.3f} Y{2:5.3f}".format(_gcodes.get(gcode.MOVE), self.motorspeed(speed, 'Y'), value)
         self.set_relative() if relative is True else self.set_absolute()
         self.send(sendstr)
 
-    def wait(self, value: float):
+    def wait(self, value: float) -> None:
         sendstr = "{0}S{1:5.3f}".format(_gcodes.get(gcode.WAIT), value)
         self.send(sendstr)
 
-    def set_zero(self):
+    def set_zero(self) -> None:
         sendstr = "{0}".format(_gcodes.get(gcode.SETZERO))
         self.send(sendstr)
 
-    def get_position(self):
+    def get_position(self) -> None:
         sendstr = "{0}".format(_gcodes.get(gcode.GET_POS))
         pos_ = self.send(sendstr)
         index_ = pos_.index('Z')

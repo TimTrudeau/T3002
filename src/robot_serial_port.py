@@ -1,7 +1,5 @@
 import serial
 from serial.tools import list_ports
-from pathlib import Path
-import contextlib
 import os
 import sys
 
@@ -70,12 +68,11 @@ def _openSerialPort(comport: str):
             stopbits=serial.STOPBITS_ONE,
             bytesize=serial.EIGHTBITS,
             timeout=2,
-            write_timeout=1
+            write_timeout=2
         )
     except Exception as ex:
     # except serial.SerialException as ex:
-        print(f"Failed to capture serial port: {ex}")
-        raise serial.SerialException
+        raise serial.SerialException(f"Failed to capture serial port: {ex}")
     finally:
         return s
 
