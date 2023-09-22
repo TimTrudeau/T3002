@@ -1,9 +1,8 @@
 
 import src.gcode as gcode
 from src.gcode import _gcodes
-# from robot_serial_port import serial_port_manager
 import src.robot_serial_port as robot_serial_port
-
+#from src.Page_GUI.pdrobot_support import top_win.Entry
 usable_gpio = [0, 3, 4, 13, 14, 15, 17, 18, 19, 20, 21, 22, 26]
 linlimit_io = 5
 rotatlimit_io = 6
@@ -24,10 +23,14 @@ class GCodeMaker:
         in from the command line with the call to the Interpreter module.
         """
         self.run = run
-        if GCodeMaker.serialport is None:
-            GCodeMaker.serialport = robot_serial_port.serial_port_manager(port)
-            GCodeMaker.serialport.timeout = 1
-            print(f'GCodeMaker serial port {GCodeMaker.serialport} type {type(GCodeMaker.serialport)}\n')
+        try:
+            if GCodeMaker.serialport is None:
+                GCodeMaker.serialport = robot_serial_port.serial_port_manager(port)
+                GCodeMaker.serialport.timeout = 1
+                print(f'GCodeMaker serial port {GCodeMaker.serialport} type {type(GCodeMaker.serialport)}\n')
+        except AttributeError as ee:
+            print(f'No serial port found: {ee}')
+            assert False
         self.linear_limit = gcode.linlimit
         self.rotation_limit = gcode.rotatlimit
         if path is None:
@@ -73,7 +76,7 @@ class GCodeMaker:
                     reply = GCodeMaker.serialport.readline().decode().strip()
                     print(f'{reply}')
         except Exception as ex:
-            print(f'exception from serialport write {ex}')
+            print(f'exception from serialport write: {ex}')
 
         try:
             self.outfile.write(cmd)
