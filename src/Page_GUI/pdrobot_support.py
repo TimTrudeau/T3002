@@ -8,35 +8,31 @@
 """
 import sys
 import tkinter as tk
-import time
-system_packages = set(sys.modules.keys())
-
-#import .pdrobot as pdrobot
-import src.Page_GUI.pdrobot as pdrobot
-#import Page_GUI.pdrobot as pdrobot
+import Page_GUI.pdrobot as pdrobot
 from src.gdfile_dialog import FileDialog
-from src.gcode_maker import GCodeMaker
 from src.interpreter.interpreter import Interpreter
 from src.interpreter.parser import Parser
 from pathlib import Path
-from src.robot_serial_port import serial_port_manager
+from src.gcode_maker import GCodeMaker
 
 _debug = False  # False to eliminate debug printing from callback functions.
+system_packages = set(sys.modules.keys())
 
 # GLOBALS
-gm = GCodeMaker()
+gm = None
 top_win = None
 
 def main(toplevel: object = None):
     """Main entry point for the application.
     toplevel is None unless this is called by test routine
     """
-    global top_win, root
+    global top_win, root, gm
     if toplevel is None:
         try:
             root = tk.Tk()
             root.protocol('WM_DELETE_WINDOW', root.destroy)
             top_win = pdrobot.Toplevel1(root)
+            gm = GCodeMaker()
             # Creates a toplevel widget
             root.mainloop()
         finally:
@@ -130,22 +126,7 @@ def cb_waypoint(*args):
 
 
 def cb_serial_port_reset(*args):
-    global top_win
-    try:
-        top_win.EntrySp.configure(foreground="black")
-        top_win.EntrySp.configure(background="green")
-        if gm.serialport is not None:
-            gm.serialport.reset_output_buffer()
-        #     gm.serialport.close()
-        # while gm.serialport.is_open:
-        #     pass
-        # gm.serialport = serial_port_manager()
-        top_win.serial_prt.set(gm.serialport.name)
-    except (TypeError, AttributeError) as e:
-        print(e)
-        top_win.serial_prt.set('XXXXX')
-        top_win.EntrySp.configure(foreground="#ff0000")
-        top_win.EntrySp.configure(background="white")
+    gm.serial_port_reset()
 
 
 def cb_cancel_file(*args):
@@ -153,6 +134,10 @@ def cb_cancel_file(*args):
     gm.serialport.reset_output_buffer()
     top_win.halt = True
     top_win.dg_filename.set("")
+    top_win.gcode_list_var.set("")
+    top_win.ButtonRunProg.configure(state='disabled')
+    top_win.ButtonStepProg.configure(state='disabled')
+    top_win.ButtonEditProg.configure(state='disabled')
 
 
 def cb_getSourceFile(*args):
@@ -180,6 +165,7 @@ def cb_getSourceFile(*args):
     _listbox.selection_set(0)
     top_win.ButtonRunProg.configure(state='active')
     top_win.ButtonStepProg.configure(state='active')
+    top_win.ButtonEditProg.configure(state='active')
 
 
 def cb_run_program(*args):

@@ -10,6 +10,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import src.Page_GUI.pdrobot_support as pdrobot_support
 
+
 _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
 _fgcolor = '#000000'  # X11 color: 'black'
 _compcolor = 'gray40'  # X11 color: #666666
@@ -21,8 +22,8 @@ _tabbg1 = 'grey75'
 _tabbg2 = 'grey89'
 _bgmode = 'light'
 
+# Global
 _style_code_ran = 0
-
 
 def _style_code():
     global _style_code_ran
@@ -54,7 +55,6 @@ class Toplevel1:
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.
         '''
-
         top.geometry("720x700+238+96")
         top.minsize(600, 750)
         top.maxsize(1900, 1200)
@@ -1130,23 +1130,23 @@ class Toplevel1:
         self.ButtonStepProg.configure(highlightbackground="#d9d9d9")
         self.ButtonStepProg.configure(highlightcolor="black")
         self.ButtonStepProg.configure(pady="0")
-        self.ButtonStepProg.configure(state='disabled')
+        self.ButtonStepProg.configure(state='active')
         self.ButtonStepProg.configure(text='''Step''')
 
-        self.ButtonStepProg = tk.Button(self.Labelframe4)
-        self.ButtonStepProg.place(relx=0.505, rely=0.6, height=24, width=50, bordermode='ignore')
-        self.ButtonStepProg.configure(activebackground="beige")
-        self.ButtonStepProg.configure(activeforeground="black")
-        self.ButtonStepProg.configure(background="#d9d9d9")
-        self.ButtonStepProg.configure(command=lambda: pdrobot_support.cb_edit_program(self.Listbox1))
-        self.ButtonStepProg.configure(compound='left')
-        self.ButtonStepProg.configure(disabledforeground="#a3a3a3")
-        self.ButtonStepProg.configure(foreground="#000000")
-        self.ButtonStepProg.configure(highlightbackground="#d9d9d9")
-        self.ButtonStepProg.configure(highlightcolor="black")
-        self.ButtonStepProg.configure(pady="0")
-        self.ButtonStepProg.configure(state='disabled')
-        self.ButtonStepProg.configure(text='''Edit''')
+        self.ButtonEditProg = tk.Button(self.Labelframe4)
+        self.ButtonEditProg.place(relx=0.505, rely=0.6, height=24, width=50, bordermode='ignore')
+        self.ButtonEditProg.configure(activebackground="beige")
+        self.ButtonEditProg.configure(activeforeground="black")
+        self.ButtonEditProg.configure(background="#d9d9d9")
+        self.ButtonEditProg.configure(command=lambda: pdrobot_support.cb_edit_program(self.Listbox1))
+        self.ButtonEditProg.configure(compound='left')
+        self.ButtonEditProg.configure(disabledforeground="#a3a3a3")
+        self.ButtonEditProg.configure(foreground="#000000")
+        self.ButtonEditProg.configure(highlightbackground="#d9d9d9")
+        self.ButtonEditProg.configure(highlightcolor="black")
+        self.ButtonEditProg.configure(pady="0")
+        self.ButtonEditProg.configure(state='disabled')
+        self.ButtonEditProg.configure(text='''Edit''')
 
         self.ButtonSelectFile = tk.Button(self.Labelframe4)
         self.ButtonSelectFile.place(relx=0.907, rely=0.267, height=24, width=30, bordermode='ignore')
@@ -1222,12 +1222,10 @@ class Toplevel1:
         self.EntrySp.configure(insertbackground="black")
         self.EntrySp.configure(font="TkFixedFont")
         self.EntrySp.configure(textvariable=self.serial_prt)
-        self.serial_prt.set("XXXXX")
-#        self.serial_prt.set(pdrobot_support.gm.serialport.name)
+        self.serial_prt.set("-----")
 
 
 from time import time, localtime, strftime
-
 
 class ToolTip(tk.Toplevel):
     """ Provides a ToolTip widget for Tkinter.

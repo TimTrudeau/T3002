@@ -57,7 +57,7 @@ BEGIN {CLIQ cycle test}
         ENDIF;
         count := count + 1;
         WAIT 1;
-   UNTIL fails >= 3;
+   UNTIL fails >= 10;
    running := FALSE;
    STOP;
 END.  {CLIQ cycle test}

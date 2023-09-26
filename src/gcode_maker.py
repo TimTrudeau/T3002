@@ -3,6 +3,8 @@ import src.gcode as gcode
 from src.gcode import _gcodes
 import src.robot_serial_port as robot_serial_port
 from serial.serialutil import SerialTimeoutException, SerialException
+import src.Page_GUI.pdrobot_support as pdrobot_support
+
 usable_gpio = [0, 3, 4, 13, 14, 15, 17, 18, 19, 20, 21, 22, 26]
 linlimit_io = 5
 rotatlimit_io = 6
@@ -23,14 +25,8 @@ class GCodeMaker:
         in from the command line with the call to the Interpreter module.
         """
         self.run = run
-        try:
-            if GCodeMaker.serialport is None:
-                GCodeMaker.serialport = robot_serial_port.serial_port_manager(port)
-                GCodeMaker.serialport.timeout = 2
-                print(f'GCodeMaker serial port {GCodeMaker.serialport} type {type(GCodeMaker.serialport)}\n')
-        except AttributeError as ee:
-            print(f'No serial port found: {ee}')
-            assert False
+        self.serial_port_reset(port)
+        print(f'GCodeMaker serial port {GCodeMaker.serialport} type {type(GCodeMaker.serialport)}\n')
         self.linear_limit = gcode.linlimit
         self.rotation_limit = gcode.rotatlimit
         if path is None:
@@ -74,9 +70,10 @@ class GCodeMaker:
                 GCodeMaker.serialport.write(bytes(cmd, 'utf-8'))
                 reply = GCodeMaker.serialport.readline().decode().strip()
                 if not reply:
-                    return "bad"
-        except (SerialException) as ex:
+                    raise SerialException
+        except (SerialException, PermissionError) as ex:
             print(f'write exception from serialport: {ex}')
+            self.serial_port_reset()
         try:
             self.outfile.write(cmd)
         except (FileExistsError, AttributeError,) as ex:
@@ -131,3 +128,22 @@ class GCodeMaker:
         index_ = pos_.index('Z')
         print(f"MY INDEX {index_}")
         return pos_[:index_]
+
+    def serial_port_reset(self, name: str=None):
+        try:
+            if GCodeMaker.serialport is None:
+                GCodeMaker.serialport = robot_serial_port.serial_port_manager()
+                GCodeMaker.serialport.timeout = 2
+            else:
+                GCodeMaker.serialport.reset_output_buffer()
+                GCodeMaker.serialport.close()
+                GCodeMaker.serialport = robot_serial_port.serial_port_manager(name)
+                pdrobot_support.top_win.EntrySp.configure(foreground="#000000")
+                pdrobot_support.top_win.EntrySp.configure(background="green")
+                pdrobot_support.top_win.serial_prt.set(GCodeMaker.serialport.name)
+
+        except (TypeError, AttributeError) as e:
+            print(e)
+            pdrobot_support.top_win.serial_prt.set('XXXXX')
+            pdrobot_support.top_win.EntrySp.configure(foreground="#ff0000")
+            pdrobot_support.top_win.EntrySp.configure(background="white")
