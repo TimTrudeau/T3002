@@ -8,7 +8,7 @@
 """
 import sys
 import tkinter as tk
-import Page_GUI.pdrobot as pdrobot
+import src.Page_GUI.pdrobot as pdrobot
 from src.gdfile_dialog import FileDialog
 from src.interpreter.interpreter import Interpreter
 from src.interpreter.parser import Parser
@@ -95,7 +95,6 @@ def cb_stop(*args):
 
 def cb_go(*args):
     global top_win
- 
     try:
         val = args[1].get()
         top_win.absolutePos.set(val)
@@ -106,6 +105,13 @@ def cb_go(*args):
     except ValueError:
         pass
 
+def cb_toggle_wp_set(*args):
+    if args[0].get() == 0:
+        args[1].foreground = '#777777'
+        print(f' waypoint state 777 ')
+    else:
+        args[1].foreground = '#000'
+        print(f' waypoint state 000')
 
 def cb_waypoint(*args):
     global top_win
@@ -114,13 +120,13 @@ def cb_waypoint(*args):
     if args[0] == 1 and not top_win.set1_locked.get():
         top_win.set1_pos.set(pos)
         top_win.set1_rot.set(rot)
-    elif args[0] == 2:
+    elif args[0] == 2 and not top_win.set2_locked.get():
         top_win.set2_pos.set(pos)
         top_win.set2_rot.set(rot)
-    elif args[0] == 3:
+    elif args[0] == 3 and not top_win.set3_locked.get():
         top_win.set3_pos.set(pos)
         top_win.set3_rot.set(rot)
-    elif args[0] == 4:
+    elif args[0] == 4 and not top_win.set4_locked.get():
         top_win.set4_pos.set(pos)
         top_win.set4_rot.set(rot)
 
@@ -173,19 +179,15 @@ def cb_run_program(*args):
     #  gm.run_gcode(top_win.gcode_file)
     listbox = args[0]
     gcode = listbox.get(0)
-    if gm.send(gcode) == "bad":
-        top_win.serial_prt.set('XXXXX')
-        top_win.EntrySp.configure(foreground="#ff0000")
-        top_win.EntrySp.configure(background="white")
-        return
-    root.after(500, lambda: runnext(listbox))
+#    root.after(500, lambda: runnext(listbox))  // 500ms skews delays
+    root.after(50, lambda: runnext(listbox))
 
 def cb_step_program(*args):
     try:
         _listbox = args[0]
         index = _listbox.curselection()[0]
         _listbox.selection_clear(index)
-        gcode = _listbox.get(index)
+        gcode = _listbox.get(index).strip('\n')
         gm.send(gcode)
         index += 1
         _listbox.selection_set(index)
@@ -213,7 +215,7 @@ def runnext(_listbox: object):
     if top_win.halt is True:
         return
     if cb_step_program(_listbox):
-        root.after(500, lambda: runnext(_listbox))
+        root.after(50, lambda: runnext(_listbox))
 
 
 def cb_exit_program(*args):

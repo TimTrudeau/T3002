@@ -63,12 +63,13 @@ class GCodeMaker:
     def send(self, command: str) -> str:
         """ Send Interpreted commands to Output GCODE file.
         """
-        print(f'Command={command}')
+        print(f'Command===={command}')
         cmd = command + '\n'
         try:
             if self.run:
                 GCodeMaker.serialport.write(bytes(cmd, 'utf-8'))
                 reply = GCodeMaker.serialport.readline().decode().strip()
+                print(f'Serial Port Reply {reply}')
                 if not reply:
                     raise SerialException
         except (SerialException, PermissionError) as ex:
@@ -142,8 +143,8 @@ class GCodeMaker:
                 pdrobot_support.top_win.EntrySp.configure(background="green")
                 pdrobot_support.top_win.serial_prt.set(GCodeMaker.serialport.name)
 
-        except (TypeError, AttributeError) as e:
-            print(e)
+        except Exception as e:
+            print(f'Exception during serial port reset" {e}')
             pdrobot_support.top_win.serial_prt.set('XXXXX')
             pdrobot_support.top_win.EntrySp.configure(foreground="#ff0000")
             pdrobot_support.top_win.EntrySp.configure(background="white")

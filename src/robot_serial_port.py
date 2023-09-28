@@ -48,13 +48,14 @@ def serial_port_manager(portname: str=None):
         return _serialport
     except ValueError as ex:
         print(f"Serial Port parameter error={ex}")
-        return None
+        raise Exception
     except (serial.SerialException, AttributeError) as ex:
         print(f"Serial Port not found. {ex}")
-        return None
+        raise Exception
     except Exception as ex:
         print(f'unknown {ex}')
-        return None
+        if _serialport is not None:
+            _serialport.close()
 
 def _openSerialPort(comport: str):
     """Opens the serial port name passed in comport. Returns the stream id"""

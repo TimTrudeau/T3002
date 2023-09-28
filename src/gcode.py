@@ -1,6 +1,6 @@
 linlimit = 280
 rotatlimit = 720
-flow = {'linMaxFlow': 4000, 'rotMaxFlow': 5000}
+flow = {'linMaxFlow': 4000, 'rotMaxFlow': 20000}
 linsteps_per_mm = 800*2
 rotsteps_per_degree = int(36/4)
 
