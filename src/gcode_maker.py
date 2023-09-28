@@ -69,7 +69,7 @@ class GCodeMaker:
             if self.run:
                 GCodeMaker.serialport.write(bytes(cmd, 'utf-8'))
                 reply = GCodeMaker.serialport.readline().decode().strip()
-                print(f'Serial Port Reply {reply}')
+                print(f'Serial Port Reply >>{reply}<<')
                 if not reply:
                     raise SerialException
         except (SerialException, PermissionError) as ex:
@@ -85,10 +85,10 @@ class GCodeMaker:
     def motorspeed(self, value: float, axis: str) -> float:
         if axis == 'X':
             flow = gcode.flow.get('linMaxFlow')
-            speed = min(flow, flow * (value / 100))
+            speed = min(flow, flow * (value / 100.0))
         else:
             flow = gcode.flow.get('rotMaxFlow')
-            speed = min(flow, flow * (value / 100))
+            speed = min(flow, flow * (value / 100.0))
         return float(speed)
 
     def go_home(self) -> None:
@@ -112,6 +112,11 @@ class GCodeMaker:
 
     def move_rot(self, value: float, speed: int = 10, relative: bool = False) -> None:
         sendstr = "{0}F{1:5.3f} Y{2:5.3f}".format(_gcodes.get(gcode.MOVE), self.motorspeed(speed, 'Y'), value)
+        self.set_relative() if relative is True else self.set_absolute()
+        self.send(sendstr)
+
+    def move_both(self, pos: float, rot: float, speed: int = 10, relative: bool = False) -> None:
+        sendstr = "{0}F{1:5.3f} X{2:5.3f} Y{3:5.3f}".format(_gcodes.get(gcode.MOVE), self.motorspeed(speed, 'X'), pos, rot)
         self.set_relative() if relative is True else self.set_absolute()
         self.send(sendstr)
 

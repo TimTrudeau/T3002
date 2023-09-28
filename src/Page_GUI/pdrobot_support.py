@@ -56,22 +56,24 @@ def cb_buttonHome(*args):
 
 def cb_buttonLin(*args):
     global top_win
+    position = float(args[0])
     val = top_win.absolutePos.get()
     speed = top_win.speedLin.get()
-    val = 0 if val == "" else float(val)
-    val += args[0]
+    val = 0.0 if val == "" else float(val)
+    val += position
     top_win.absolutePos.set(str(f'{val:3.2f}'))
-    gm.move_lin(val, speed=speed)
+    gm.move_lin(position, speed=speed, relative=True)
 
 
 def cb_buttonRot(*args):
     global top_win
+    rotation = float(args[0])
     val = top_win.absoluteRot.get()
     speed = top_win.speedRot.get()
-    val = 0 if val == "" else int(val)
-    val += args[0]
-    top_win.absoluteRot.set(str(val))
-    gm.move_rot(val, speed=speed)
+    val = 0.0 if val == "" else float(val)
+    val += rotation
+    top_win.absoluteRot.set(f'{val:3.2f}')
+    gm.move_rot(rotation, speed=speed, relative=True)
 
 
 def cb_scaleLinSpeed(*args):
@@ -96,13 +98,16 @@ def cb_stop(*args):
 def cb_go(*args):
     global top_win
     try:
-        val = args[1].get()
-        top_win.absolutePos.set(val)
-        gm.move_lin(int(val), top_win.speedLin.get())
-        val = args[2].get()
-        top_win.absoluteRot.set(val)
-        gm.move_rot(int(val), top_win.speedRot.get())
-    except ValueError:
+        pos = args[1].get()
+        rot = args[2].get()
+        top_win.absolutePos.set(pos)
+        top_win.absoluteRot.set(rot)
+        flow = top_win.speedRot.get()
+        gm.move_both(float(pos), float(rot), flow)
+
+
+    except ValueError as e:
+        print(f'Error in cb_go: {e}')
         pass
 
 def cb_toggle_wp_set(*args):
