@@ -228,6 +228,5 @@ def cb_exit_program(*args):
     root.destroy()
 
 
-
 if __name__ == '__main__':
     pdrobot.start_up()

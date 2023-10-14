@@ -26,7 +26,7 @@ class GCodeMaker:
         """
         self.run = run
         self.serial_port_reset(port)
-        print(f'GCodeMaker serial port {GCodeMaker.serialport} type {type(GCodeMaker.serialport)}\n')
+        print(f'GCODEMAKER SERIAL PORT: {GCodeMaker.serialport} \n type {type(GCodeMaker.serialport)}\n')
         self.linear_limit = gcode.linlimit
         self.rotation_limit = gcode.rotatlimit
         if path is None:
@@ -69,16 +69,16 @@ class GCodeMaker:
             if self.run:
                 GCodeMaker.serialport.write(bytes(cmd, 'utf-8'))
                 reply = GCodeMaker.serialport.readline().decode().strip()
-                print(f'Serial Port Reply >>{reply}<<')
+                print(f'SERIAL PORT REPLY >>{reply}<<')
                 if not reply:
                     raise SerialException
         except (SerialException, PermissionError) as ex:
-            print(f'write exception from serialport: {ex}')
+            print(f'WRITE EXCEPTION FROM SERIALPORT: {ex}')
             self.serial_port_reset()
         try:
             self.outfile.write(cmd)
         except (FileExistsError, AttributeError,) as ex:
-            raise Exception(f'send to outfile {ex}')
+            raise Exception(f'SEND TO OUTFILE {ex}')
         finally:
             return ""
 

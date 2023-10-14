@@ -1054,7 +1054,7 @@ class Toplevel1:
         self.Labelframe4.configure(highlightcolor="black")
 
         self.Label5 = tk.Label(self.Labelframe4)
-        self.Label5.place(relx=0.019, rely=0.267, height=21, width=64, bordermode='ignore')
+        self.Label5.place(relx=0.010, rely=0.267, height=21, width=68, bordermode='ignore')
         self.Label5.configure(activebackground="#f9f9f9")
         self.Label5.configure(anchor='w')
         self.Label5.configure(background="#d9d9d9")
@@ -1219,7 +1219,7 @@ class Toplevel1:
         self.ButtonSp.configure(text='''Reset''')
         
         self.EntrySp = tk.Entry(self.Labelframe6)
-        self.EntrySp.place(relx=0.2, rely=0.235, height=20, relwidth=0.54, bordermode='ignore')
+        self.EntrySp.place(relx=0.05, rely=0.24, height=24, relwidth=0.90, bordermode='ignore')
         self.EntrySp.configure(disabledforeground="#a3a3a3")
         self.EntrySp.configure(background="white")
         self.EntrySp.configure(foreground="black")

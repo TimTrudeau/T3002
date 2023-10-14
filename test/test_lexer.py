@@ -1,7 +1,7 @@
 import pytest
 import contextlib
-from interpreter.lexer import Lexer
-from interpreter.token_types import *
+from src.interpreter.lexer import Lexer
+from src.interpreter.token_types import *
 
 token_list = [
     ('TRUE', BOOL_CONST, TRUE),
@@ -39,6 +39,10 @@ token_list = [
     ('WAIT', WAIT, 'WAIT'),
     ('IO', IO, 'PIN'),
     ('END', END, 'END'),
+    ('AND', AND, 'AND'),
+    ('OR', OR, 'OR'),
+    ('NOT', NOT, 'NOT'),
+
 ]
 
 @contextlib.contextmanager

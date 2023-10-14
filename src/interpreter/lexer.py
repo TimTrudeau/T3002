@@ -44,6 +44,7 @@ VAR_TYPES = [INTEGER, BOOL, REAL, INTEGER_CONST, BOOL_CONST, REAL_CONST]
 """Dictionary of reserved words
 """
 RESERVED_KEYWORDS: dict[str, Token] = {
+    'AND': Token('AND', 'AND'),
     'BEGIN': Token('BEGIN', 'BEGIN'),
     'BOOL': Token('BOOL', 'BOOL'),
     'DIV': Token('INTEGER_DIV', 'DIV'),
@@ -58,13 +59,13 @@ RESERVED_KEYWORDS: dict[str, Token] = {
     'LOOP': Token('LOOP', 'LOOP'),
     'MOVETO': Token('MOVETO', 'MOVETO'),
     'NOT': Token('NOT', 'NOT'),
+    'OR': Token('OR', 'OR'),
     'PROGRAM': Token('PROGRAM', 'PROGRAM'),
     'REAL': Token('REAL', 'REAL'),
     'ROTATE': Token('ROTATE', 'ROTATE'),
     'STOP' : Token('STOP', 'STOP'),
     'THEN': Token('THEN', 'THEN'),
     'TRUE': Token('BOOL_CONST', 'TRUE'),
-    'TURN': Token('TURN', 'TURN'),
     'UNTIL': Token('UNTIL', 'UNTIL'),
     'VAR': Token('VAR', 'VAR'),
     'WAIT': Token('WAIT', 'WAIT'),

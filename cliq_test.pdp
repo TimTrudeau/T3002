@@ -3,11 +3,11 @@ VAR
    count           : INTEGER;
    passes          : INTEGER;
    fails           : INTEGER;
-   running	   : BOOL;
+   running	       : BOOL;
    turned          : BOOL;
 
 IO
-   linerLimit      : PININ 6;
+   linearLimit      : PININ 6;
    rotationLimit   : PININ 7;
    commands        : PINOUT 23;
    response        : PINOUT 13;

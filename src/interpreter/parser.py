@@ -95,7 +95,9 @@ class IO_(Var):
         self.pin = pin
 
 class Point(AST):
-    """The Point node has type_ pnt with value distance and speed.
+    """The Point node has type_ PNT with value distance and speed.
+    Points can be either absolute of relative. Relative points are declared
+    with a prepended sign.
     """
     def __init__(self, token: Token, distance, speed):
         token.type = PNT
@@ -104,12 +106,16 @@ class Point(AST):
         self.speed = speed
 
 class Waypoint(Var):
-    """The Waypoint node is subclass of Var. Type becomes WAYPOINT with pin direction and pin number added.
+    """The Waypoint node is subclass of Var. Type becomes WAYPOINT.
+    each waypoint consists to two point objects. lpoint is the linear point
+    and rpoint is the rotational.
     """
     def __init__(self, token: Token, point: Point):
         token.type = WAYPOINT
         super(Waypoint, self).__init__(token)
         self.point = point
+#        self.lpoint = point
+ #       self.rpoint = point
 
 class IfNode(AST):
     """The If node is constructed from a logic test
@@ -555,7 +561,7 @@ class Parser(object):
     @staticmethod
     def empty():
         """Lexeme
-        An empty production
+        An empty expression
         """
         return NoOp()
 

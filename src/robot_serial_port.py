@@ -40,20 +40,20 @@ def serial_port_manager(portname: str=None):
         portname = '/dev/ttyAMA0'  # This is the serial port on the raspberry pi
     try:
         _serialport = _openSerialPort(portname)
-        print(f"GM Serial Port name={_serialport.name}.")
+        print(f"GM SERIAL PORT NAME={_serialport.name}.")
         sys.stdout.flush()
         _serialport.flush()
         if _serialport.isatty(): print('This is a TTY')
-        if not _serialport.isOpen(): print(f'serial port not open {_serialport}')
+        if not _serialport.isOpen(): print(f'SERIAL PORT NOT OPEN {_serialport}')
         return _serialport
     except ValueError as ex:
-        print(f"Serial Port parameter error={ex}")
+        print(f"SERIAL PORT PARAMETER ERROR={ex}")
         raise Exception
     except (serial.SerialException, AttributeError) as ex:
-        print(f"Serial Port not found. {ex}")
+        print(f"SERIAL PORT NOT FOUND. {ex}")
         raise Exception
     except Exception as ex:
-        print(f'unknown {ex}')
+        print(f'UNKNOWN {ex}')
         if _serialport is not None:
             _serialport.close()
 
@@ -68,18 +68,18 @@ def _openSerialPort(comport: str):
             parity=serial.PARITY_NONE,
             stopbits=serial.STOPBITS_ONE,
             bytesize=serial.EIGHTBITS,
-            timeout=2,
-            write_timeout=2
+            timeout=5,
+            write_timeout=5
         )
     except Exception as ex:
     # except serial.SerialException as ex:
-        raise serial.SerialException(f"Failed to capture serial port: {ex}")
+        raise serial.SerialException(f"FAILED TO CAPTURE SERIAL PORT: {ex}")
     finally:
         return s
 
 
 if __name__ == '__main__':
-    print(f'Avalable serial ports {serialscan()}')
+    print(f'AVALABLE SERIAL PORTS {serialscan()}')
     with serial_port_manager() as serialport:
         serialport.write(b'M114 D')
-    print("whats going on")
+    print("WHATS GOING ON")

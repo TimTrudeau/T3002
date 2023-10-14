@@ -1,8 +1,8 @@
 
 
 import pytest
-from interpreter import Parser
-from interpreter.lexer import Token as Token
+from src.interpreter.parser import Parser
+from src.interpreter.lexer import Token as Token
 
 If_expressions = [
     ('IF 3 >= 3:  \n tt := 22; \n ELSE: \n tt := -66; \n ENDIF;', 22, -66),
