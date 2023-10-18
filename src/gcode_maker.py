@@ -1,4 +1,4 @@
-
+import os
 import src.gcode as gcode
 from src.gcode import _gcodes
 import src.robot_serial_port as robot_serial_port
@@ -14,7 +14,8 @@ try:
 except Exception as e:
     print(f"No Pi GPIO {e}")
     print(f"GPIO UNAVAILABLE {e}")
-    raise ImportError
+    if os.name == 'posix':
+        raise ImportError
 
 
 class GCodeMaker:
@@ -139,10 +140,11 @@ class GCodeMaker:
         try:
             if GCodeMaker.serialport is None:
                 GCodeMaker.serialport = robot_serial_port.serial_port_manager()
-                GCodeMaker.serialport.timeout = 2
+                GCodeMaker.serialport.timeout = 1
             else:
-                GCodeMaker.serialport.reset_output_buffer()
-                GCodeMaker.serialport.close()
+                if GCodeMaker.serialport.is_open:
+                    GCodeMaker.serialport.reset_output_buffer()
+                    GCodeMaker.serialport.close()
                 GCodeMaker.serialport = robot_serial_port.serial_port_manager(name)
                 pdrobot_support.top_win.EntrySp.configure(foreground="#000000")
                 pdrobot_support.top_win.EntrySp.configure(background="green")

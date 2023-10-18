@@ -35,7 +35,7 @@ def serial_port_manager(portname: str=None):
     if os.name == 'nt':
         if portname is None or portname == '':
             portlist = serialscan()
-            portname = portlist[0]
+            portname = portlist[-1]
     else:
         portname = '/dev/ttyAMA0'  # This is the serial port on the raspberry pi
     try:
@@ -44,7 +44,7 @@ def serial_port_manager(portname: str=None):
         sys.stdout.flush()
         _serialport.flush()
         if _serialport.isatty(): print('This is a TTY')
-        if not _serialport.isOpen(): print(f'SERIAL PORT NOT OPEN {_serialport}')
+        if _serialport.isOpen(): print(f'SERIAL PORT NOT OPEN {_serialport}')
         return _serialport
     except ValueError as ex:
         print(f"SERIAL PORT PARAMETER ERROR={ex}")

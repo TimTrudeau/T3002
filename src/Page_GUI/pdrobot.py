@@ -1209,7 +1209,7 @@ class Toplevel1:
         self.ButtonSp.configure(activebackground="#dfdfdf")
         self.ButtonSp.configure(activeforeground="black")
         self.ButtonSp.configure(background="#d9d9d9")
-        self.ButtonSp.configure(command=pdrobot_support.cb_serial_port_reset)
+        self.ButtonSp.configure(command=lambda: pdrobot_support.cb_serial_port_reset(self.serial_prt.get()))
         self.ButtonSp.configure(compound='left')
         self.ButtonSp.configure(disabledforeground="#a3a3a3")
         self.ButtonSp.configure(foreground="#000000")

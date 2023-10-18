@@ -137,7 +137,10 @@ def cb_waypoint(*args):
 
 
 def cb_serial_port_reset(*args):
-    gm.serial_port_reset()
+    port_name = args[0]
+    if "XXX" in port_name:
+        port_name = ""
+    gm.serial_port_reset(port_name)
 
 
 def cb_cancel_file(*args):
