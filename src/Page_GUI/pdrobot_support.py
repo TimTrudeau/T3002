@@ -41,7 +41,7 @@ def main(toplevel: object = None):
         # toplevel provided by test
         top_win = toplevel
         gm.serialport.close()
-ca
+
 
 def cb_buttonHome(*args):
     # For now go_home homes both axis
