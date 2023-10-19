@@ -74,8 +74,9 @@ class GCodeMaker:
                 if not reply:
                     raise SerialException
         except (SerialException, PermissionError) as ex:
-            print(f'WRITE EXCEPTION FROM SERIALPORT: {ex}')
-            self.serial_port_reset()
+            print(f'ROBOT SERIAL PORT DID NOT RESPOND: {ex}')
+            pdrobot_support.top_win.EntrySp.configure(background="red")
+            #self.serial_port_reset() Do not reset. Just report it.
         try:
             self.outfile.write(cmd)
         except (FileExistsError, AttributeError,) as ex:
