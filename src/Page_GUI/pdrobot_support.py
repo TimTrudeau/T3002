@@ -114,28 +114,26 @@ def cb_go(*args):
 
 
 def cb_toggle_wp_set(*args):
-    if args[0] == 0:
-        args[1].state = tk.DISABLED
-        print(f' waypoint state 777 ')
+    if args[0] == True:
+        args[1].configure(state='disabled')
     else:
-        args[1].state = tk.ACTIVE
-        print(f' waypoint state 000')
+        args[1].configure(state='active')
 
 
 def cb_waypoint(*args):
     global top_win
     pos = top_win.absolutePos.get()
     rot = top_win.absoluteRot.get()
-    if args[0] == 1 and not top_win.set1_locked.get():
+    if args[0] == 1:
         top_win.set1_pos.set(pos)
         top_win.set1_rot.set(rot)
-    elif args[0] == 2 and not top_win.set2_locked.get():
+    elif args[0] == 2:
         top_win.set2_pos.set(pos)
         top_win.set2_rot.set(rot)
-    elif args[0] == 3 and not top_win.set3_locked.get():
+    elif args[0] == 3:
         top_win.set3_pos.set(pos)
         top_win.set3_rot.set(rot)
-    elif args[0] == 4 and not top_win.set4_locked.get():
+    elif args[0] == 4:
         top_win.set4_pos.set(pos)
         top_win.set4_rot.set(rot)
 
