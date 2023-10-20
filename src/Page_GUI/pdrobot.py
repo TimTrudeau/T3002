@@ -805,7 +805,7 @@ class Toplevel1:
         self.Checkbutton2.configure(activeforeground="black")
         self.Checkbutton2.configure(anchor='w')
         self.Checkbutton2.configure(background="#d9d9d9")
-        #self.Checkbutton1.configure(command=lambda: pdrobot_support.cb_toggle_wp_set(self.set2_locked, self.buttonSetWp2))
+        self.Checkbutton2.configure(command=lambda: pdrobot_support.cb_toggle_wp_set(self.Checkbutton2.variable, self.buttonSetWp2))
         self.Checkbutton2.configure(compound='left')
         self.Checkbutton2.configure(disabledforeground="#a3a3a3")
         self.Checkbutton2.configure(foreground="#000000")

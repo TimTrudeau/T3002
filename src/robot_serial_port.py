@@ -37,7 +37,7 @@ def serial_port_manager(portname: str=None):
             portlist = serialscan()
             portname = portlist[-1]
     else:
-        portname = '/dev/ttyAMA0'  # This is the serial port on the raspberry pi
+        portname = '/dev/ttyACM0'  # This is the serial port on the raspberry pi
     try:
         _serialport = _openSerialPort(portname)
         print(f"GM SERIAL PORT NAME={_serialport.name}.")

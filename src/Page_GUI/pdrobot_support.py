@@ -22,6 +22,7 @@ system_packages = set(sys.modules.keys())
 gm = None
 top_win = None
 
+
 def main(toplevel: object = None):
     """Main entry point for the application.
     toplevel is None unless this is called by test routine
@@ -36,9 +37,10 @@ def main(toplevel: object = None):
             # Creates a toplevel widget
             root.mainloop()
         finally:
-            gm.serialport.close()
+            if gm.serialport is not None:
+                gm.serialport.close()
     else:
-        # toplevel provided by test
+        # toplevel provided by test routines
         top_win = toplevel
         gm.serialport.close()
 
@@ -91,8 +93,8 @@ def cb_scaleRotSpeed(*args):
 
 
 def cb_stop(*args):
-     gm.stop()
-     top_win.halt = True
+    gm.stop()
+    top_win.halt = True
 
 
 def cb_go(*args):
@@ -110,13 +112,15 @@ def cb_go(*args):
         print(f'Error in cb_go: {e}')
         pass
 
+
 def cb_toggle_wp_set(*args):
-    if args[0].get() == 0:
-        args[1].foreground = '#777777'
+    if args[0] == 0:
+        args[1].state = tk.DISABLED
         print(f' waypoint state 777 ')
     else:
-        args[1].foreground = '#000'
+        args[1].state = tk.ACTIVE
         print(f' waypoint state 000')
+
 
 def cb_waypoint(*args):
     global top_win
@@ -187,8 +191,9 @@ def cb_run_program(*args):
     #  gm.run_gcode(top_win.gcode_file)
     listbox = args[0]
     gcode = listbox.get(0)
-#    root.after(500, lambda: runnext(listbox))  // 500ms skews delays
+    #    root.after(500, lambda: runnext(listbox))  // 500ms skews delays
     root.after(50, lambda: runnext(listbox))
+
 
 def cb_step_program(*args):
     try:
@@ -205,6 +210,7 @@ def cb_step_program(*args):
         _listbox.selection_set(0)
         return 0
 
+
 def cb_edit_program(*arg):
     import subprocess
     import platform
@@ -218,6 +224,7 @@ def cb_edit_program(*arg):
         subprocess.Popen(app_name.split())
     except Exception as e:
         print(f'File editor failed to open: {e}')
+
 
 def runnext(_listbox: object):
     if top_win.halt is True:
