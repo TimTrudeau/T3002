@@ -1216,7 +1216,7 @@ class Toplevel1:
         self.ButtonSp.configure(highlightbackground="#d9d9d9")
         self.ButtonSp.configure(highlightcolor="black")
         self.ButtonSp.configure(pady="0")
-        self.ButtonSp.configure(text='''Reset''')
+        self.ButtonSp.configure(text='''Capture''')
         
         self.EntrySp = tk.Entry(self.Labelframe6)
         self.EntrySp.place(relx=0.05, rely=0.24, height=24, relwidth=0.90, bordermode='ignore')
